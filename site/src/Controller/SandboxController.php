@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Controller;
+    namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Routing\Annotation\Route;
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class SandboxController extends AbstractController
-{
     /**
-     * @Route("/sandbox", name="sandbox")
+     * Class SandboxController
+     *
+     * @package App\Controller
+     * @Route("/sandbox")
      */
-    public function index(): Response
+    class SandboxController extends AbstractController
     {
-        return $this->render('sandbox/index.html.twig', [
-            'controller_name' => 'SandboxController',
-        ]);
+        /**
+         * @Route("/", name="sandbox")
+         */
+        public function index(): Response
+        {
+            return $this->render('sandbox/index.html.twig', ['controller_name' => 'SandboxController',]);
+        }
     }
-}
