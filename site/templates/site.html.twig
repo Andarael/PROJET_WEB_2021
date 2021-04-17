@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+
+{% block title %} page du site {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset("css/site_vente.css") }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block body %}
+
+    <div id="header">
+        {% block header %}
+            <hr>
+            <p>le header</p>
+        {% endblock %}
+    </div>
+
+    <div id="menu">
+        {% block menu %}
+            <hr>
+            <p>le menu</p>
+            <p> Nombre de produits dans la base : XXX </p>
+            <a href="https://www.andarael.fr">lien 1</a>
+            <a href="https://www.andarael.fr">lien 2</a>
+            <a href="https://www.andarael.fr">lien 3</a>
+
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}
+            <hr>
+            <p>le content</p>
+        {% endblock %}
+    </div>
+
+    <div id="footer">
+        {% block footer %}
+            <hr>
+            <p>le footer</p>
+        {% endblock %}
+    </div>
+
+{% endblock %}

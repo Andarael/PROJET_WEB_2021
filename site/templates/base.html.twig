@@ -2,9 +2,11 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
+
         <title>{% block title %}Welcome !{% endblock %}</title>
 
         {% block stylesheets %}
+            <link href="{{ asset("css/global.css") }}" rel="stylesheet"/>
         {% endblock %}
 
         {% block javascripts %}

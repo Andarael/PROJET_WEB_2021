@@ -1,0 +1,6 @@
+menu : 
+	il faut créer un template twig du menu. Et s'arranger pour que ce template récupère le status de l'utilisateur connecté. En fonction du status on affiches différentes choses dans le menu. Tout ça est géré directement par le template. 
+	Il faut également que le template menu récupère le nbr de produits dispo dans la bdd
+
+header :
+	- Pour l'img on doit récup la nature de l'user , et dans le template du header aller chercher l'img correspondante. 
