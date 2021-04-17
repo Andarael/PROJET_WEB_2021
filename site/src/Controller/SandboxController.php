@@ -7,9 +7,6 @@
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
     /**
-     * Class SandboxController
-     *
-     * @package App\Controller
      * @Route("/sandbox")
      */
     class SandboxController extends AbstractController
@@ -19,6 +16,8 @@
          */
         public function index(): Response
         {
-            return $this->render('sandbox/index.html.twig', ['controller_name' => 'SandboxController',]);
+            return $this->render("Sandbox/index.html.twig");
         }
+
+
     }
