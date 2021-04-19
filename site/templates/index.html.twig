@@ -4,6 +4,18 @@
 
 {% block content %}
     {{ parent() }}
-    <p>Bienvenue [[USER]] </p>
-    {#todo ajouter display du flash#}
-{% endblock%}
+
+    {% if userType == 0 %}
+        <p>Bienvenue <b>Utilisateur Anonyme</b></p>
+    {% else %}
+        <p>Bienvenue <b>{{ user.prenom ~ ' ' ~ user.nom }}</b></p>
+        {% if userType == 1 %}
+            <p>Vous êtes un utilisateur authentifié</p>
+        {% elseif userType ==2 %}
+            <p>Vous êtes un administrateur !</p>
+        {% endif %}
+    {% endif %}
+
+
+    {# todo ajouter display du flash #}
+{% endblock %}

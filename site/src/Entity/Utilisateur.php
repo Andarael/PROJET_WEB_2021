@@ -2,36 +2,36 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateursRepository;
+use App\Repository\UtilisateurRepository;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="im2021_utilisateurs")
- *
- * @ORM\Entity(repositoryClass=UtilisateursRepository::class)
+ * @ORM\Table(name="im2021_utilisateurs", options={"COMMENT":"Table des utilisateurs du site"})
+ * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
  */
-class Utilisateurs
+class Utilisateur
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="pk", type="integer")
+     * @ORM\Column(name="pk", type="integer", length=4)
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30, unique=true,options={"comment"="sert de login (doit etre unique)"})
+     * @ORM\Column(name="identifiant", type="string", length=30, unique=true, options={"COMMENT":"sert de login (doit etre unique)"})
+     *
+     * Je n'ai pas réussi à trouver pourquoi les commentaires ne s'exportent pas en sql ?
      */
     private $identifiant;
 
     /**
-     * @ORM\Column(type="string", length=64, options={"comment"="mot de passe crypté"})
+     * @ORM\Column(name="motdepasse", type="string", length=64, options={"comment":"mot de passe crypté : il faut une taille assez grande pour ne pas le tronquer"})
      */
-    private $motdepasse;
+    private $motDePasse;
 
     /**
-     * @var string
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $nom;
@@ -47,18 +47,25 @@ class Utilisateurs
     private $anniversaire;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="isadmin", type="boolean", options={"COMMENT":"type booléen"})
+     *
+     * Selon 'doctrine-project.org' tinyInt(1) se mappe vers un bool
      */
-    private $isadmin;
-    
+    private $isAdmin;
+
     /**
-    * Utilisateurs constructor.
-    */
-    public function __construct()
+     * Utilisateur constructor.
+     * @param $nom
+     * @param $prenom
+     * @param $anniversaire
+     * @param $isAdmin
+     */
+    public function __construct($nom, $prenom, $anniversaire, $isAdmin)
     {
-        $this->nom = "NULL";
-        $this->prenom = "NULL";
+        $this->nom = null;
+        $this->prenom = null;
         $this->anniversaire = null;
+        $this->isAdmin = false;
     }
 
     public function getId(): ?int
@@ -78,14 +85,14 @@ class Utilisateurs
         return $this;
     }
 
-    public function getMotdepasse(): ?string
+    public function getMotDePasse(): ?string
     {
-        return $this->motdepasse;
+        return $this->motDePasse;
     }
 
-    public function setMotdepasse(string $motdepasse): self
+    public function setMotDePasse(string $motDePasse): self
     {
-        $this->motdepasse = sha1($motdepasse);
+        $this->motDePasse = sha1($motDePasse);
 
         return $this;
     }
@@ -126,20 +133,15 @@ class Utilisateurs
         return $this;
     }
 
-    public function getIsadmin(): ?bool
+    public function getIsAdmin(): ?bool
     {
-        return $this->isadmin;
+        return $this->isAdmin;
     }
 
-    public function setIsadmin(bool $isadmin): self
+    public function setIsAdmin(bool $isAdmin): self
     {
-        $this->isadmin = $isadmin;
+        $this->isAdmin = $isAdmin;
 
         return $this;
-    }
-
-    public function __toString(): ?string
-    {
-        return $this->getNom();
     }
 }

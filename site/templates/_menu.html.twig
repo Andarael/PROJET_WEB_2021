@@ -4,21 +4,29 @@
 <p> Nombre de produits dans la base : {{ nbProducts }} </p>
 <ul>
     <li>user : {{ userType }}</li>
-    <li><a href="{{ path("index") }}">index</a></li>
-    <li><a href="{{ path("create_account") }}">Créer un compte</a></li>
+    <li><a href="{{ path("index") }}">Accueil</a></li>
 
     {% if userType == 0 %}
-        <li><a href="{{ path("login") }}">login</a></li>
+        <li><a href="{{ path("login") }}">Connexion</a></li>
+        <li><a href="{{ path("create_account") }}">Créer un compte</a></li>
     {% endif %}
 
 
     {% if userType == 1 %}
-        <li><a href="{{ path("logout") }}">logout</a></li>
+        <li><a href="{{ path("logout") }}">Déconnexion</a></li>
+        <li><a href="{{ path("profile") }}">Gérer le profil</a></li>
+        <li><a href="{{ path("produits_list") }}">Lister les produits</a></li>
+        <li><a href="{{ path("panier") }}">Gérer le panier</a></li>
     {% endif %}
 
 
     {% if userType == 2 %}
         <li><a href="{{ path("logout") }}">login</a></li>
+        <li><a href="{{ path("utilisateur_list") }}">Gérer les clients</a></li>
+{#
+        <li><a href="{{ path("produits_new") }}">Créer un produit</a></li>
+#}
+
         <li><a href="https://fr.wikipedia.org/wiki/Amour_et_Amn%C3%A9sie">Amour et Amnésie</a></li>
     {% endif %}
 
