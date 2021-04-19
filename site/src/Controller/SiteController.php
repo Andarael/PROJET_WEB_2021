@@ -2,6 +2,7 @@
 
     namespace App\Controller;
 
+    use App\Entity\Utilisateurs;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,12 +10,6 @@
 
     class SiteController extends AbstractController
     {
-
-        public function getUserType(): int
-        {
-            // todo query la bd pour l'info
-            return 1;
-        }
 
         /**
          * @Route("/", name="index")
@@ -24,6 +19,40 @@
             $userType = $this->getUserType();
             $arg = ['userType' => $userType];
             return $this->render("index.html.twig", $arg);
+        }
+
+        public function getUserType(): int
+        {
+            $usr = $this->getCurrentUser();
+
+            if (is_null($usr))
+                return 0;
+            else if ($usr->getIsadmin())
+                return 2;
+            else
+                return 1;
+        }
+
+        /**
+         * @Route ("/error", name="error")
+         * Permet de générer une erreur 404 pour toutes les pages inconnues
+         *
+         * @return Response
+         */
+        public function errorAction(): Response
+        {
+            throw new NotFoundHttpException("page inconnue : '' ");
+        }
+
+        public function getCurrentUser(): ?Utilisateurs
+        {
+            $identifiant = $this->getParameter('moi');
+            $manager = $this->getDoctrine()->getManager();
+            $utilisateurRepository = $manager->getRepository(Utilisateurs::class);
+
+            /** @var Utilisateurs $usr */
+            $usr = $utilisateurRepository->findOneBy(['identifiant' => $identifiant]);
+            return $usr;
         }
 
         /**
@@ -38,18 +67,23 @@
         }
 
         /**
+         * @Route("/header", name="header")
+         */
+        public function headerAction(): Response
+        {
+            $userType = $this->getUserType();
+            return $this->render("_header.html.twig", ['userType' => $userType]);
+        }
+
+        /**
          * @Route("/login", name="login")
          */
         public function loginAction(): Response
         {
-            $userType = $this->getUserType();
-            $arg = ['userType' => $userType];
-
-            if ($userType != 0) {
+            if ($this->getUserType() != 0)
                 return $this->redirectToRoute("error");
-            }
 
-            return $this->render("login.html.twig", $arg);
+            return $this->render("login.html.twig");
         }
 
         /**
@@ -57,26 +91,23 @@
          */
         public function logoutAction(): Response
         {
-            dump("test");
             $userType = $this->getUserType();
-            $arg = ['userType' => $userType];
-            if ($userType == 0) {
+            if ($userType == 0)
                 return $this->redirectToRoute("error");
-            }
 
             return $this->redirectToRoute("index");
         }
 
         /**
-         * @Route ("/error", name="error")
-         * Permet de générer une erreur 404 pour toutes les pages inconnues
-         *
-         * @return Response
+         * @Route("/create_account", name="create_account")
          */
-        public function errorAction(): Response
+        public function createAccountAction()
         {
-            throw new NotFoundHttpException("page inconnue : '' ");
-        }
+            if ($this->getUserType() != 0)
+                return $this->redirectToRoute("error");
 
+            return $this->render("create_account.html.twig");
+
+        }
 
     }

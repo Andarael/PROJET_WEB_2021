@@ -17,7 +17,7 @@ class Panier
      * @ORM\Id
      *
      * @ORM\ManyToOne(targetEntity=Utilisateurs::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="pk")
      */
     private $utilisateurs;
 
@@ -25,7 +25,7 @@ class Panier
      * @ORM\Id
      *
      * @ORM\ManyToOne(targetEntity=Produits::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="code_produit")
      */
     private $produits;
 

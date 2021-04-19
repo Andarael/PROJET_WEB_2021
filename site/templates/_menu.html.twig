@@ -5,6 +5,7 @@
 <ul>
     <li>user : {{ userType }}</li>
     <li><a href="{{ path("index") }}">index</a></li>
+    <li><a href="{{ path("create_account") }}">Créer un compte</a></li>
 
     {% if userType == 0 %}
         <li><a href="{{ path("login") }}">login</a></li>
@@ -20,11 +21,6 @@
         <li><a href="{{ path("logout") }}">login</a></li>
         <li><a href="https://fr.wikipedia.org/wiki/Amour_et_Amn%C3%A9sie">Amour et Amnésie</a></li>
     {% endif %}
-
-
-    <li><a href="https://www.andarael.fr">lien 1</a></li>
-    <li><a href="https://www.andarael.fr">lien 2</a></li>
-    <li><a href="https://www.andarael.fr">lien 3</a></li>
 
 </ul>
 {# todo afficher différents liens en fonction de l'utilisateur connecté #}

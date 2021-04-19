@@ -11,7 +11,7 @@
 
     <div id="header">
         {% block header %}
-            {{ include("_header.html.twig", {userType : userType}) }}
+            {{ render(path("header")) }}
         {% endblock %}
     </div>
 

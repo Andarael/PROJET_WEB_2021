@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateursRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,6 +31,7 @@ class Utilisateurs
     private $motdepasse;
 
     /**
+     * @var string
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $nom;
@@ -54,8 +56,8 @@ class Utilisateurs
     */
     public function __construct()
     {
-        $this->nom = null;
-        $this->prenom = null;
+        $this->nom = "NULL";
+        $this->prenom = "NULL";
         $this->anniversaire = null;
     }
 
@@ -112,12 +114,12 @@ class Utilisateurs
         return $this;
     }
 
-    public function getAnniversaire(): ?\DateTimeInterface
+    public function getAnniversaire(): ?DateTimeInterface
     {
         return $this->anniversaire;
     }
 
-    public function setAnniversaire(?\DateTimeInterface $anniversaire): self
+    public function setAnniversaire(?DateTimeInterface $anniversaire): self
     {
         $this->anniversaire = $anniversaire;
 
@@ -134,5 +136,10 @@ class Utilisateurs
         $this->isadmin = $isadmin;
 
         return $this;
+    }
+
+    public function __toString(): ?string
+    {
+        return $this->getNom();
     }
 }
