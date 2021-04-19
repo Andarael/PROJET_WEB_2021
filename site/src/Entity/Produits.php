@@ -42,7 +42,13 @@ class Produits
         $this->prix_u = null;
     }
 
-    public function getCodeproduit(): ?int
+    // todo ne pas avoir ça en 2 fois
+    public function getcodeProduit(): ?int
+    {
+        return $this->code_produit;
+    }
+
+    public function getcode_produit(): ?int
     {
         return $this->code_produit;
     }

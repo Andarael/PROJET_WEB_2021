@@ -1,0 +1,13 @@
+{% extends "site.html.twig" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+    {% if userType == 0 %}
+        <p>Vous pourrez bientôt vous authentifier !</p>
+    {% else %}
+        <p>Vous êtes déjà authentifié</p>
+    {% endif %}
+
+{% endblock %}

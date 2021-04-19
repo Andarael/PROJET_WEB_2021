@@ -11,20 +11,13 @@
 
     <div id="header">
         {% block header %}
-            {{ render(path("header")) }}
-            <hr>
-            <p>le header</p>
+            {{ include("_header.html.twig", {userType : userType}) }}
         {% endblock %}
     </div>
 
     <div id="menu">
         {% block menu %}
-            <hr>
-            <p>le menu</p>
-            <p> Nombre de produits dans la base : XXX </p>
-            <a href="https://www.andarael.fr">lien 1</a>
-            <a href="https://www.andarael.fr">lien 2</a>
-            <a href="https://www.andarael.fr">lien 3</a>
+            {{ render(path("menu")) }}
         {% endblock %}
     </div>
 
@@ -37,8 +30,7 @@
 
     <div id="footer">
         {% block footer %}
-            <hr>
-            <p>le footer</p>
+            {{ include("_footer.html.twig") }}
         {% endblock %}
     </div>
 

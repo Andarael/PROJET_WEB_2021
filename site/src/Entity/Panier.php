@@ -31,7 +31,7 @@ class Panier
      */
     private $qte_commande;
 
-    public function getPkutilisateurs(): ?int
+    public function getPk_utilisateurs(): ?int
     {
         return $this->pk_utilisateurs;
     }

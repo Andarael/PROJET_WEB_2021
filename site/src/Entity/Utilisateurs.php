@@ -83,7 +83,7 @@ class Utilisateurs
 
     public function setMotdepasse(string $motdepasse): self
     {
-        $this->motdepasse = $motdepasse;
+        $this->motdepasse = sha1($motdepasse);
 
         return $this;
     }
@@ -124,12 +124,12 @@ class Utilisateurs
         return $this;
     }
 
-    public function getIsadmin(): ?boolean
+    public function getIsadmin(): ?bool
     {
         return $this->isadmin;
     }
 
-    public function setIsadmin(boolean $isadmin): self
+    public function setIsadmin(bool $isadmin): self
     {
         $this->isadmin = $isadmin;
 
