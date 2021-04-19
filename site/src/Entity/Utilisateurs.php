@@ -17,7 +17,7 @@ class Utilisateurs
      * @ORM\GeneratedValue
      * @ORM\Column(name="pk", type="integer")
      */
-    private $pk;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true,options={"comment"="sert de login (doit etre unique)"})
@@ -59,9 +59,9 @@ class Utilisateurs
         $this->anniversaire = null;
     }
 
-    public function getPk(): ?int
+    public function getId(): ?int
     {
-        return $this->pk;
+        return $this->id;
     }
 
     public function getIdentifiant(): ?string

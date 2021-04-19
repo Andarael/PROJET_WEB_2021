@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="mybase.db">
-  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.20">
+  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.21">
     <root id="1">
       <ServerVersion>3.34.0</ServerVersion>
     </root>
@@ -1362,12 +1362,12 @@
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_doctrine_migration_versions_1</UnderlyingIndexName>
     </key>
-    <column id="500" parent="171" name="pk_utilisateurs">
+    <column id="500" parent="171" name="utilisateurs_id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="501" parent="171" name="code_produit">
+    <column id="501" parent="171" name="produits_id">
       <Position>2</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
@@ -1379,111 +1379,120 @@
     </column>
     <index id="503" parent="171" name="sqlite_autoindex_im2021_panier_1">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>pk_utilisateurs
-code_produit</ColNames>
-      <ColumnCollations></ColumnCollations>
+      <ColNames>utilisateurs_id
+produits_id</ColNames>
+      <ColumnCollations>
+</ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="504" parent="171">
-      <ColNames>pk_utilisateurs
-code_produit</ColNames>
+    <index id="504" parent="171" name="IDX_2129058F1E969C5">
+      <ColNames>utilisateurs_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="505" parent="171" name="IDX_2129058FCD11A2CF">
+      <ColNames>produits_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="506" parent="171">
+      <ColNames>utilisateurs_id
+produits_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_im2021_panier_1</UnderlyingIndexName>
     </key>
-    <column id="505" parent="172" name="code_produit">
+    <column id="507" parent="172" name="code_produit">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="506" parent="172" name="libelle">
+    <column id="508" parent="172" name="libelle">
       <Position>2</Position>
       <DataType>VARCHAR(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="507" parent="172" name="prix_u">
+    <column id="509" parent="172" name="prix_u">
       <Position>3</Position>
       <DataType>DOUBLE PRECISION|0s</DataType>
       <DefaultExpression>NULL</DefaultExpression>
     </column>
-    <column id="508" parent="172" name="qte_stock">
+    <column id="510" parent="172" name="qte_stock">
       <Position>4</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="509" parent="172">
+    <key id="511" parent="172">
       <ColNames>code_produit</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="510" parent="173" name="pk">
+    <column id="512" parent="173" name="pk">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="511" parent="173" name="motdepasse">
+    <column id="513" parent="173" name="motdepasse">
       <Position>2</Position>
       <DataType>VARCHAR(64)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="512" parent="173" name="nom">
+    <column id="514" parent="173" name="nom">
       <Position>3</Position>
       <DataType>VARCHAR(30)|0s</DataType>
       <DefaultExpression>NULL</DefaultExpression>
     </column>
-    <column id="513" parent="173" name="prenom">
+    <column id="515" parent="173" name="prenom">
       <Position>4</Position>
       <DataType>VARCHAR(30)|0s</DataType>
       <DefaultExpression>NULL</DefaultExpression>
     </column>
-    <column id="514" parent="173" name="anniversaire">
+    <column id="516" parent="173" name="anniversaire">
       <Position>5</Position>
       <DataType>DATE|0s</DataType>
       <DefaultExpression>NULL</DefaultExpression>
     </column>
-    <column id="515" parent="173" name="isadmin">
+    <column id="517" parent="173" name="isadmin">
       <Position>6</Position>
       <DataType>BOOLEAN|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="516" parent="173" name="identifiant">
+    <column id="518" parent="173" name="identifiant">
       <Position>7</Position>
       <DataType>VARCHAR(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="517" parent="173" name="UNIQ_29DD1761C90409EC">
+    <index id="519" parent="173" name="UNIQ_29DD1761C90409EC">
       <ColNames>identifiant</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="518" parent="173">
+    <key id="520" parent="173">
       <ColNames>pk</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="519" parent="174" name="type">
+    <column id="521" parent="174" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="520" parent="174" name="name">
+    <column id="522" parent="174" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="521" parent="174" name="tbl_name">
+    <column id="523" parent="174" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="522" parent="174" name="rootpage">
+    <column id="524" parent="174" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="523" parent="174" name="sql">
+    <column id="525" parent="174" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="524" parent="175" name="name">
+    <column id="526" parent="175" name="name">
       <Position>1</Position>
     </column>
-    <column id="525" parent="175" name="seq">
+    <column id="527" parent="175" name="seq">
       <Position>2</Position>
     </column>
   </database-model>

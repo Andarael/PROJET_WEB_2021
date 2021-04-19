@@ -12,38 +12,49 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Panier
 {
-    /**
-     * @ORM\Id @ORM\ManyToOne(targetEntity="Utilisateurs")
-     * @ORM\JoinColumn(name="pk_utilisateurs", referencedColumnName="pk")
-     * @ORM\Column(type="integer")
-     */
-    private $pk_utilisateurs;
 
     /**
-     * @ORM\Id @ORM\ManyToOne(targetEntity="Produits")
-     * @ORM\JoinColumn(name="pk_produits", referencedColumnName="code_produit")
-     * @ORM\Column(type="integer")
+     * @ORM\Id
+     *
+     * @ORM\ManyToOne(targetEntity=Utilisateurs::class)
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $code_produit;
+    private $utilisateurs;
+
+    /**
+     * @ORM\Id
+     *
+     * @ORM\ManyToOne(targetEntity=Produits::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $produits;
 
     /**
      * @ORM\Column(type="integer")
      */
     private $qte_commande;
 
-    public function getPk_utilisateurs(): ?int
+
+    public function getUtilisateurs(): ?Utilisateurs
     {
-        return $this->pk_utilisateurs;
+        return $this->utilisateurs;
     }
 
-    public function getCodeProduit(): ?int
+    public function setUtilisateurs(?Utilisateurs $utilisateurs): self
     {
-        return $this->code_produit;
+        $this->utilisateurs = $utilisateurs;
+
+        return $this;
     }
 
-    public function setCodeProduit(int $code_produit): self
+    public function getProduits(): ?Produits
     {
-        $this->code_produit = $code_produit;
+        return $this->produits;
+    }
+
+    public function setProduits(?Produits $produits): self
+    {
+        $this->produits = $produits;
 
         return $this;
     }

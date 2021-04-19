@@ -17,7 +17,7 @@ class Produits
      * @ORM\GeneratedValue
      * @ORM\Column(name="code_produit", type="integer")
      */
-    private $code_produit;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=30)
@@ -42,15 +42,9 @@ class Produits
         $this->prix_u = null;
     }
 
-    // todo ne pas avoir ça en 2 fois
-    public function getcodeProduit(): ?int
+    public function getId(): ?int
     {
-        return $this->code_produit;
-    }
-
-    public function getcode_produit(): ?int
-    {
-        return $this->code_produit;
+        return $this->id;
     }
 
     public function getLibelle(): ?string
