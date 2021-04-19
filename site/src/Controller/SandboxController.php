@@ -21,9 +21,13 @@
         }
 
 
-
-
-
+        /**
+         * @Route("/header", name="header")
+         */
+        public function headerAction() : Response
+        {
+           return $this->render("_header.html.twig", ['userType' => 2]);
+        }
 
 
         /**

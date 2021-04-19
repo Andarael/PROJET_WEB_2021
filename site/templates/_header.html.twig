@@ -1,0 +1,11 @@
+{% if userType == 0 %}
+    <img src="{{ asset("anon.png") }}" alt="anonymous user">
+{% endif %}
+
+{% if userType == 1 %}
+    <img src="{{ asset("logged.png") }}" alt="authenticated user">
+{% endif %}
+
+{% if userType == 2 %}
+    <img src="{{ asset("admin.png") }}" alt="admin user">
+{% endif %}
