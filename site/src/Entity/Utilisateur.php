@@ -20,8 +20,10 @@ class Utilisateur
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="pk", type="integer", length=4, scale=4, columnDefinition="COMMENT 'This is a column comment'")
-     * @todo commentaires de la table
+     * @ORM\Column(name="pk", type="integer", length=4, scale=4)
+     *
+     * //columnDefinition="COMMENT 'This is a column comment'
+     * todo commentaires de la table
      */
     private $id;
 
@@ -65,7 +67,7 @@ class Utilisateur
 
     /**
      * @ORM\Id
-     * --LigneSPqnier- : au pluriel !
+     * --LigneSPanier- : au pluriel !
      * todo checks etc...
      * @ORM\OneToMany(targetEntity=LignePanier::class, mappedBy="utilisateur", orphanRemoval=true)
      */
@@ -76,6 +78,7 @@ class Utilisateur
      */
     public function __construct()
     {
+        $this->id = null;
         $this->nom = null;
         $this->prenom = null;
         $this->anniversaire = null;
@@ -189,4 +192,10 @@ class Utilisateur
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->identifiant;
+    }
+
 }

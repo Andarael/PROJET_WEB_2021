@@ -27,9 +27,8 @@ class LignePanier
      * @ORM\Id
      *
      * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="lignesPanier")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="pk" )
      *
-     * comme la clé primaire ne s'appelle pas 'id' dans les annotations de utilisateur, 'doctrine:schema:validate' indique une erreur
      */
     private $utilisateur;
 

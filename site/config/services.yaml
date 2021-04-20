@@ -5,9 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
   currentUser : '1'
-  #id de l'utilisateur actuel.
+  # id de l'utilisateur actuel.
   # '1' pour l'admin
-  #Pour un utilisateur anonyme on peut supprimer ce paramètre, ou renseigner un id inexistant (négatif par exemple)
+  # Pour un utilisateur anonyme on peut supprimer ce paramètre, ou renseigner un id inexistant (négatif par exemple)
 
 services:
   # default configuration for services in *this* file

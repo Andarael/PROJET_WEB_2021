@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/ligne/panier")
+ * @Route("/panier")
  */
 class LignePanierController extends AbstractController
 {

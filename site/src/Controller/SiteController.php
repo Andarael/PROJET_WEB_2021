@@ -102,15 +102,4 @@ class SiteController extends AbstractController
         return $this->redirectToRoute("index");
     }
 
-    /**
-     * @Route("/panier", name="panier")
-     */
-    public function panierAction()
-    {
-        if ($this->userType != 1)
-            return $this->redirectToRoute("error");
-
-        return $this->render("panier/show.html.twig");
-    }
-
 }
