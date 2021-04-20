@@ -66,12 +66,17 @@ class Utilisateur
     private $isAdmin;
 
     /**
-     * @ORM\Id
-     * --LigneSPanier- : au pluriel !
-     * todo checks etc...
      * @ORM\OneToMany(targetEntity=LignePanier::class, mappedBy="utilisateur", orphanRemoval=true)
      */
-    private $lignesPanier;
+    private $panier;
+
+//    /**
+//     * @ORM\Id
+//     * --LigneSPanier- : au pluriel !
+//     * todo checks etc...
+//     * @ORM\OneToMany(targetEntity=LignePanier::class, mappedBy="utilisateur", orphanRemoval=true)
+//     */
+//    private $lignesPanier;
 
     /**
      * Utilisateur constructor.
@@ -83,7 +88,8 @@ class Utilisateur
         $this->prenom = null;
         $this->anniversaire = null;
         $this->isAdmin = false;
-        $this->lignesPanier = new ArrayCollection();
+//        $this->lignesPanier = new ArrayCollection();
+        $this->panier = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,39 +169,69 @@ class Utilisateur
         return $this;
     }
 
-    /**
-     * @return Collection|LignePanier[]
-     */
-    public function getLignesPanier(): Collection
-    {
-        return $this->lignesPanier;
-    }
-
-    public function addLignePanier(LignePanier $lignePanier): self
-    {
-        if (!$this->lignesPanier->contains($lignePanier)) {
-            $this->lignesPanier[] = $lignePanier;
-            $lignePanier->setUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLignePanier(LignePanier $lignePanier): self
-    {
-        if ($this->lignesPanier->removeElement($lignePanier)) {
-            // set the owning side to null (unless already changed)
-            if ($lignePanier->getUtilisateur() === $this) {
-                $lignePanier->setUtilisateur(null);
-            }
-        }
-
-        return $this;
-    }
-
+//    /**
+//     * @return Collection|LignePanier[]
+//     */
+//    public function getLignesPanier(): Collection
+//    {
+//        return $this->lignesPanier;
+//    }
+//
+//    public function addLignePanier(LignePanier $lignePanier): self
+//    {
+//        if (!$this->lignesPanier->contains($lignePanier)) {
+//            $this->lignesPanier[] = $lignePanier;
+//            $lignePanier->setUtilisateur($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeLignePanier(LignePanier $lignePanier): self
+//    {
+//        if ($this->lignesPanier->removeElement($lignePanier)) {
+//            // set the owning side to null (unless already changed)
+//            if ($lignePanier->getUtilisateur() === $this) {
+//                $lignePanier->setUtilisateur(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
+//
     public function __toString()
     {
         return $this->identifiant;
     }
+
+/**
+ * @return Collection|LignePanier[]
+ */
+public function getPanier(): Collection
+{
+    return $this->panier;
+}
+
+public function addPanier(LignePanier $panier): self
+{
+    if (!$this->panier->contains($panier)) {
+        $this->panier[] = $panier;
+        $panier->setUtilisateur($this);
+    }
+
+    return $this;
+}
+
+public function removePanier(LignePanier $panier): self
+{
+    if ($this->panier->removeElement($panier)) {
+        // set the owning side to null (unless already changed)
+        if ($panier->getUtilisateur() === $this) {
+            $panier->setUtilisateur(null);
+        }
+    }
+
+    return $this;
+}
 
 }

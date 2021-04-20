@@ -49,7 +49,7 @@ class LignePanierController extends AbstractController
     }
 
     /**
-     * @Route("/{produit}", name="ligne_panier_show", methods={"GET"})
+     * @Route("/{id}", name="ligne_panier_show", methods={"GET"})
      */
     public function show(LignePanier $lignePanier): Response
     {
@@ -59,7 +59,7 @@ class LignePanierController extends AbstractController
     }
 
     /**
-     * @Route("/{produit}/edit", name="ligne_panier_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="ligne_panier_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, LignePanier $lignePanier): Response
     {
@@ -79,11 +79,11 @@ class LignePanierController extends AbstractController
     }
 
     /**
-     * @Route("/{produit}", name="ligne_panier_delete", methods={"POST"})
+     * @Route("/{id}", name="ligne_panier_delete", methods={"POST"})
      */
     public function delete(Request $request, LignePanier $lignePanier): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$lignePanier->getProduit(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$lignePanier->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($lignePanier);
             $entityManager->flush();

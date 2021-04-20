@@ -4,31 +4,34 @@ namespace App\Entity;
 
 use App\Repository\LignePanierRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @ORM\Entity(repositoryClass=LignePanierRepository::class)
- * @ORM\Table(name="im2021_lignes_paniers", options={"COMMENT":"Les paniers des utilisateurs"})
+ * @ORM\Table(name="im2021_lignes_panier",
+ *     uniqueConstraints={@UniqueConstraint(name="usr_prod", columns={"utilisateur","produit"})})
+ *
+ * // contrainte pour les coupes utilisateur/produit soient unique
+ * // On garde la clé primaire 'id' pour plus de simplicité dans la gestion des lignes
  */
 class LignePanier
 {
     /**
-     * @var Produit
-     *
      * @ORM\Id
-     *
-     * @ORM\OneToOne(targetEntity=Produit::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Produit::class)
+     * @ORM\JoinColumn(name="produit", nullable=false)
      */
     private $produit;
 
     /**
-     * @var Utilisateur
-     *
-     * @ORM\Id
-     *
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="lignesPanier")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="pk" )
-     *
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="panier")
+     * @ORM\JoinColumn(name="utilisateur", nullable=false, referencedColumnName="pk" )
      */
     private $utilisateur;
 
@@ -37,24 +40,39 @@ class LignePanier
      */
     private $quantite;
 
+    /**
+     * LignePanier constructor.
+     */
+    public function __construct()
+    {
+        $this->utilisateur = null;
+        $this->produit = null;
+        $this->quantite = 0;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getProduit(): ?Produit
     {
         return $this->produit;
     }
 
-    public function setProduit(Produit $produit): self
+    public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
 
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUtilisateur(): ?utilisateur
     {
         return $this->utilisateur;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUtilisateur(?utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
 

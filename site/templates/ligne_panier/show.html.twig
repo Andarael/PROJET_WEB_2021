@@ -1,14 +1,22 @@
-<!DOCTYPE html>
+{% extends 'default/site.html.twig' %}
 
-<title>LignePanier</title>
+{% block title %}Ligne Panier{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>LignePanier</h1>
 
     <table class="table">
         <tbody>
             <tr>
+                <th>Id</th>
+                <th>utilisateur</th>
+                <th>produit</th>
                 <th>Quantite</th>
+            </tr>
+            <tr>
+                <td>{{ ligne_panier.id }}</td>
+                <td>{{ ligne_panier.utilisateur.identifiant }}</td>
+                <td>{{ ligne_panier.produit.libelle }}</td>
                 <td>{{ ligne_panier.quantite }}</td>
             </tr>
         </tbody>
@@ -16,7 +24,7 @@
 
     <a href="{{ path('ligne_panier_index') }}">back to list</a>
 
-    <a href="{{ path('ligne_panier_edit', {'produit': ligne_panier.produit}) }}">edit</a>
+    <a href="{{ path('ligne_panier_edit', {'id': ligne_panier.id}) }}">edit</a>
 
-    {{ include('ligne_panier/_delete_form.html.twig') }}
+    {{ include('ligne_panier/_delete_button.html.twig') }}
 {% endblock %}
