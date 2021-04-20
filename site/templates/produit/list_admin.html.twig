@@ -1,0 +1,20 @@
+{% extends 'produit/list.html.twig' %}
+
+{% block th_action %}
+    <th>actions</th>
+{% endblock %}
+
+{% block td_action %}
+    <td>
+        <a href="{{ path('produit_edit', {'id': produit.id}) }}"><button>éditer</button></a>
+    </td>
+{% endblock %}
+
+{% block add_cart %} {% endblock %}
+
+{% block content %}
+    {{ parent() }}
+    <p>
+        <a href="{{ path('produit_new') }}"><button>Ajouter un nouveau</button></a>
+    </p>
+{% endblock %}

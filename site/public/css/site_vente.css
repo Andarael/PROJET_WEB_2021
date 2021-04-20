@@ -3,5 +3,14 @@
 }
 
 * {
-    border-radius: 7px;
+    border-radius: 10px;
+}
+
+#flashError {
+    color : red;
+}
+
+
+#flashInfo {
+    color : limegreen;
 }

@@ -1,21 +1,22 @@
-{% extends "site.html.twig" %}
+{% extends "default/site.html.twig" %}
 
 {% block title %}Accueil du site{% endblock %}
 
 {% block content %}
     {{ parent() }}
 
+    <h1>Site de vente (WEB 2021)</h1>
+    <p>
+        Bienvenue <b>{{ user.prenom ~ ' ' ~ user.nom }}</b>
+    </p>
+    {# avec un utilisateur non auth on affiche donc juste 'bienvenue' #}
+
     {% if userType == 0 %}
-        <p>Bienvenue <b>Utilisateur Anonyme</b></p>
-    {% else %}
-        <p>Bienvenue <b>{{ user.prenom ~ ' ' ~ user.nom }}</b></p>
-        {% if userType == 1 %}
-            <p>Vous êtes un utilisateur authentifié</p>
-        {% elseif userType ==2 %}
-            <p>Vous êtes un administrateur !</p>
-        {% endif %}
+        <p>Vous n'êtes pas authentifié</p>
+    {% elseif userType == 1 %}
+        <p>Vous êtes un utilisateur authentifié</p>
+    {% elseif userType ==2 %}
+        <p>Vous êtes un administrateur !</p>
     {% endif %}
 
-
-    {# todo ajouter display du flash #}
 {% endblock %}

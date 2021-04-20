@@ -6,6 +6,7 @@ use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,87 +17,173 @@ use Symfony\Component\Routing\Annotation\Route;
 class UtilisateurController extends AbstractController
 {
 
+    private $userType;
+
+    /**
+     * UtilisateurController constructor.
+     *
+     * @param UserAuthController $authController
+     */
+    public function __construct(UserAuthController $authController)
+    {
+        $this->userType = $authController->getUserType();
+    }
+
     /**
      * @Route("/list", name="utilisateur_list")
      */
-    public function listAction()
+    public function UtilisateurListAction(UtilisateurRepository $utilisateurRepository): Response
     {
-        return $this->redirectToRoute("utilisateur_index");
+        // todo réactiver check
+//        if ($this->userType != 2)
+//            return $this->redirectToRoute("error");
+
+        return $this->render("utilisateur/list.html.twig", ['utilisateurs' => $utilisateurRepository->findAll()]);
     }
+
+    //    /**
+    //     * @Route("/", name="utilisateur_index")
+    //     */
+    //    public function index(UtilisateurRepository $utilisateurRepository): Response
+    //    {
+    //        return $this->redirectToRoute("utilisateur_list");
+    //    }
+
+    //    /**
+    //     * @Route("/create_account", name="create_account")
+    //     */
+    //    public function createAccountAction(Request $request): Response
+    //    {
+    //        /*
+    //         * Si user est admin : ok
+    //         * si user est anon : ok
+    //         * si user auth : NON
+    //         *
+    //         * Si admin alors option en plus pour la checkbox admin
+    //         * */
+    //
+    //        if ($this->userType == 1)
+    //            return $this->redirectToRoute("error");
+    //
+    //        $utilisateur = new Utilisateur();
+    //
+    //        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+    //        $form->handleRequest($request);
+    //        $form->add('valider', SubmitType::class, ['label' => 'valider']);
+    //
+    //        if ($this->userType == 2)
+    //            $form->add('isAdmin');
+    //
+    //        if ($form->isSubmitted() && $form->isValid()) {
+    //            $entityManager = $this->getDoctrine()->getManager();
+    //            $entityManager->persist($utilisateur);
+    //            $entityManager->flush();
+    //
+    //            if ($this->userType == 0) {
+    //                $this->addFlash('info', 'Votre compte utilisateur a bien été créé');
+    //                $this->redirectToRoute('index');
+    //            }
+    //
+    //            // à partir d'ici on est forcément dans le cas d'un admin
+    //
+    //            $this->addFlash('info', 'Le compte utilisateur a bien été modifié');
+    //            return $this->redirectToRoute('index');
+    //        }
+    //
+    //        return $this->render('utilisateur/create_account.html.twig', [
+    //            'utilisateur' => $utilisateur,
+    //            'form' => $form->createView(),
+    //        ]);
+    //    }
+
     /**
-     * @Route("/", name="utilisateur_index", methods={"GET"})
+     * @Route("/create_account", name="create_account")
      */
-    public function index(UtilisateurRepository $utilisateurRepository): Response
+    public function createAccountAction(Request $request): Response
     {
-        return $this->render('utilisateur/index.html.twig', [
-            'utilisateurs' => $utilisateurRepository->findAll(),
-        ]);
+        // todo réactiver le check pour la création de compte
+        //        if ($this->userType != 0)
+        //            return $this->redirectToRoute("error");
+
+        $utilisateur = new Utilisateur();
+
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form->add('valider', SubmitType::class, ['label' => 'valider']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //todo check form et login unique
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($utilisateur);
+            $entityManager->flush();
+
+            $this->addFlash('info', 'Votre compte utilisateur a bien été créé');
+            return $this->redirectToRoute('index');
+        }
+
+        $arg = ['utilisateur' => $utilisateur, 'form' => $form->createView()];
+        return $this->render('utilisateur/create_account.html.twig', $arg);
     }
 
     /**
      * @Route("/new", name="utilisateur_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function newAction(Request $request): Response
     {
-        $utilisateur = new Utilisateur();
-        $form = $this->createForm(UtilisateurType::class, $utilisateur);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($utilisateur);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('utilisateur_index');
-        }
-
-        return $this->render('utilisateur/new.html.twig', [
-            'utilisateur' => $utilisateur,
-            'form' => $form->createView(),
-        ]);
+        return $this->redirectToRoute("create_account");
     }
 
     /**
-     * @Route("/{id}", name="utilisateur_show", methods={"GET"})
+     * @Route("/edit", name="utilisateur_edit", methods={"GET","POST"})
      */
-    public function show(Utilisateur $utilisateur): Response
-    {
-        return $this->render('utilisateur/show.html.twig', [
-            'utilisateur' => $utilisateur,
-        ]);
-    }
+    public function editAction(Request $request, UserAuthController $authController): Response
+    {   // todo activer check
+        //        if ($this->userType != 1)
+        //            return $this->redirectToRoute("error");
 
-    /**
-     * @Route("/{id}/edit", name="utilisateur_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Utilisateur $utilisateur): Response
-    {
+        $utilisateur = $authController->getCurrentUser();
+
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form->add('valider', SubmitType::class, ['label' => 'valider']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('utilisateur_index');
+            // todo redirect liste produits avec message flash
+            $this->addFlash('info', 'Profil édité avec succès');
+            return $this->redirectToRoute('index');
         }
 
-        return $this->render('utilisateur/edit.html.twig', [
-            'utilisateur' => $utilisateur,
-            'form' => $form->createView(),
-        ]);
+        $arg = ['utilisateur' => $utilisateur, 'form' => $form->createView()];
+
+        return $this->render('utilisateur/edit.html.twig', $arg);
     }
 
     /**
-     * @Route("/{id}", name="utilisateur_delete", methods={"POST"})
+     * @Route("/delete/{id}", name="utilisateur_delete")
+     * todo check id
      */
-    public function delete(Request $request, Utilisateur $utilisateur): Response
+    public function deleteAction(Request $request, Utilisateur $utilisateur, UserAuthController $authController): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($utilisateur);
-            $entityManager->flush();
+        if ($this->userType != 2)
+            return $this->redirectToRoute("error");
+
+        if ($authController->getCurrentUser()->getId() == $utilisateur->getId()) {
+            $this->addFlash('error', 'Impossible de supprimer un utilisateur actuellement authentifié');
+            return $this->redirectToRoute("utilisateur_list");
         }
 
-        return $this->redirectToRoute('utilisateur_index');
+        // à partir d'ici on est dans le cas d'un admin qui suppr un user.
+
+        if (!$utilisateur->getIsAdmin()) {
+            // todo gérer panier
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($utilisateur);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('utilisateur_list');
     }
 }

@@ -1,0 +1,43 @@
+{% extends 'default/site.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block content %}
+    <h1>Liste des utilisateurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id </th>
+                <th>Identifiant </th>
+                <th>Mot de Passe </th>
+                <th>Nom </th>
+                <th>Prénom </th>
+                <th>Date de Naissance </th>
+                <th>Admin ? </th>
+                <th>Supprimier</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for utilisateur in utilisateurs %}
+            <tr>
+                <td>{{ utilisateur.id }}</td>
+                <td>{{ utilisateur.identifiant }}</td>
+                <td>{{ utilisateur.motDePasse }}</td>
+                <td>{{ utilisateur.nom }}</td>
+                <td>{{ utilisateur.prenom }}</td>
+                <td>{{ utilisateur.anniversaire ? utilisateur.anniversaire|date('Y-m-d') : '' }}</td>
+                <td>{{ utilisateur.isAdmin ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}"><button class="btn">Supprimer</button></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Aucun utilisateur trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

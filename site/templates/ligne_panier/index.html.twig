@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<title>LignePanier index</title>
+
+{% block body %}
+    <h1>LignePanier index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Quantite</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ligne_panier in ligne_paniers %}
+            <tr>
+                <td>{{ ligne_panier.quantite }}</td>
+                <td>
+                    <a href="{{ path('ligne_panier_show', {'produit': ligne_panier.produit}) }}">show</a>
+                    <a href="{{ path('ligne_panier_edit', {'produit': ligne_panier.produit}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('ligne_panier_new') }}">Create new</a>
+{% endblock %}

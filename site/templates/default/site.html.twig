@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "default/base.html.twig" %}
 
 {% block title %} page du site {% endblock %}
 
@@ -15,7 +15,10 @@
         {% endblock %}
     </div>
 
+    {{ include('default/_display_flashes.html.twig') }}
+
     <div id="menu">
+
         {% block menu %}
             {{ render(path("menu")) }}
         {% endblock %}
@@ -27,7 +30,7 @@
 
     <div id="footer">
         {% block footer %}
-            {{ include("_footer.html.twig") }}
+            {{ include("default/_footer.html.twig") }}
         {% endblock %}
     </div>
 

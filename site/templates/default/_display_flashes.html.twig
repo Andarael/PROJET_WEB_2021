@@ -1,0 +1,15 @@
+<div id="flashInfo">
+        <ul>
+            {% for message in app.session.flashBag.get('info') %}
+                    <li>Info : {{ message }}</li>
+            {% endfor %}
+        </ul>
+</div>
+
+<div id="flashError">
+        <ul>
+            {% for message in app.session.flashBag.get('error') %}
+                    <li>Erreur : {{ message }}</li>
+            {% endfor %}
+        </ul>
+</div>
