@@ -15,7 +15,6 @@
         <li><a href="{{ path("utilisateur_edit") }}">Gérer le profil</a></li>
         <li><a href="{{ path("produit_list") }}">Liste des produits</a></li>
         <li><a href="{{ path("panier") }}">Gérer le panier</a></li>
-        {# todo panier #}
 
     {% elseif userType == 2 %}
         <li><a href="{{ path("logout") }}">Déconnexion</a></li>
@@ -28,4 +27,3 @@
 </ul>
 
 <hr>
-{# todo afficher différents liens en fonction de l'utilisateur connecté #}

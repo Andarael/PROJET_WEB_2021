@@ -44,9 +44,9 @@
             </tr>
         </tbody>
     </table>
+
     {# On n'a pas le droit de mettres des boutons dans les balises <a> selon HTML5. Donc on passe par des form #}
-    <p>
-        {# todo #}
+    <p> {#selon le validateur pas besoin de la balise </p> fermante #}
         <form style="display: inline" action="{{ path('panier_acheter') }}"><button>Acheter</button></form>
 
         <form style="display: inline" action="{{ path('panier_delete') }}"><button>Vider</button></form>

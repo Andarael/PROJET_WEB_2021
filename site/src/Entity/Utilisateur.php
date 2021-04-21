@@ -70,14 +70,6 @@ class Utilisateur
      */
     private $panier;
 
-//    /**
-//     * @ORM\Id
-//     * --LigneSPanier- : au pluriel !
-//     * todo checks etc...
-//     * @ORM\OneToMany(targetEntity=LignePanier::class, mappedBy="utilisateur", orphanRemoval=true)
-//     */
-//    private $lignesPanier;
-
     /**
      * Utilisateur constructor.
      */
@@ -88,7 +80,6 @@ class Utilisateur
         $this->prenom = null;
         $this->anniversaire = null;
         $this->isAdmin = false;
-//        $this->lignesPanier = new ArrayCollection();
         $this->panier = new ArrayCollection();
     }
 

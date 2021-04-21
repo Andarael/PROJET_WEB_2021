@@ -1,8 +1,6 @@
 Questions à poser au prof : 
 - les fichiers que l'on a crée ou modifié dans /config/ ; est-ce qu'il faut aussi noter ceux qui on été touché par composer ? 
 
-- La toolbar disparait après avoir intallé orm
-
 
 
 - 

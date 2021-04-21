@@ -41,7 +41,6 @@ class PanierController extends AbstractController
 
         return $this->render('panier/show.html.twig',
                              ['ligne_paniers' => $lignePanierRepository->findBy(['utilisateur' => $currentUser])]);
-        // todo>
     }
 
     /**
