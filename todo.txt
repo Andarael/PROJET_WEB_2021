@@ -1,5 +1,8 @@
 
-liens vers les produits dans le panier
+garder les qte dans la lsite des produits 
+
 les checks avec les ID dans les url personnalisés
 
 Le service
+
+Nettoyer la table
