@@ -27,7 +27,7 @@
                 <td>{{ ligne_panier.quantite }}</td>
                 <td>{{ prixTotal }}€</td>
                 <td>
-                    <form action="{{ path('ligne_panier_delete', {'id': ligne_panier.id}) }}"><button>suppr</button></form>
+                    <form action="{{ path('ligne_panier_delete', {'id': ligne_panier.id}) }}"><button>supprimer</button></form>
                 </td>
             </tr>
         {% else %}

@@ -2,6 +2,12 @@
 
 {% block title %}Accueil du site{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset("css/index.css") }}" rel="stylesheet"/>
+{% endblock %}
+
+
 {% block content %}
     {{ parent() }}
 

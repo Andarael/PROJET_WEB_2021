@@ -169,69 +169,39 @@ class Utilisateur
         return $this;
     }
 
-//    /**
-//     * @return Collection|LignePanier[]
-//     */
-//    public function getLignesPanier(): Collection
-//    {
-//        return $this->lignesPanier;
-//    }
-//
-//    public function addLignePanier(LignePanier $lignePanier): self
-//    {
-//        if (!$this->lignesPanier->contains($lignePanier)) {
-//            $this->lignesPanier[] = $lignePanier;
-//            $lignePanier->setUtilisateur($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeLignePanier(LignePanier $lignePanier): self
-//    {
-//        if ($this->lignesPanier->removeElement($lignePanier)) {
-//            // set the owning side to null (unless already changed)
-//            if ($lignePanier->getUtilisateur() === $this) {
-//                $lignePanier->setUtilisateur(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
-//
     public function __toString()
     {
         return $this->identifiant;
     }
 
-/**
- * @return Collection|LignePanier[]
- */
-public function getPanier(): Collection
-{
-    return $this->panier;
-}
-
-public function addPanier(LignePanier $panier): self
-{
-    if (!$this->panier->contains($panier)) {
-        $this->panier[] = $panier;
-        $panier->setUtilisateur($this);
+    /**
+     * @return Collection|LignePanier[]
+     */
+    public function getPanier(): Collection
+    {
+        return $this->panier;
     }
 
-    return $this;
-}
-
-public function removePanier(LignePanier $panier): self
-{
-    if ($this->panier->removeElement($panier)) {
-        // set the owning side to null (unless already changed)
-        if ($panier->getUtilisateur() === $this) {
-            $panier->setUtilisateur(null);
+    public function addPanier(LignePanier $panier): self
+    {
+        if (!$this->panier->contains($panier)) {
+            $this->panier[] = $panier;
+            $panier->setUtilisateur($this);
         }
+
+        return $this;
     }
 
-    return $this;
-}
+    public function removePanier(LignePanier $panier): self
+    {
+        if ($this->panier->removeElement($panier)) {
+            // set the owning side to null (unless already changed)
+            if ($panier->getUtilisateur() === $this) {
+                $panier->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

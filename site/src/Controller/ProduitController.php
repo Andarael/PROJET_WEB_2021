@@ -85,6 +85,7 @@ class ProduitController extends AbstractController
         $form = $this->createForm(ProduitType::class, $produit);
         $form->remove("libelle");
         $form->remove("id");
+        $form->remove("prix");
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

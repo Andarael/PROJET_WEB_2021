@@ -1,20 +1,5 @@
-menu : 
-	il faut créer un template twig du menu. Et s'arranger pour que ce template récupère le status de l'utilisateur connecté. En fonction du status on affiches différentes choses dans le menu. Tout ça est géré directement par le template. 
-	Il faut également que le template menu récupère le nbr de produits dispo dans la bdd
 
-header :
-	- Pour l'img on doit récup la nature de l'user , et dans le template du header aller chercher l'img correspondante. 
-
-Déjà on commence à voir qu'il faudra à chaque fois envoyer un tableau avec dedans ['userType' => XX] pour les vues
-On peut faire des {{Render(controller(..))}}
-Et c'est le controller en question qui se charge de récup les info de l'user et de rendre le fragment twig correspondant
-
-
-ajouter au stock quand on retire du panier
-vider panier
-total panier
 liens vers les produits dans le panier
 les checks avec les ID dans les url personnalisés
-assert dans ligne panier
 
 Le service

@@ -25,7 +25,7 @@ class LignePanier
 
     /**
      * @ORM\ManyToOne(targetEntity=Produit::class)
-     * @ORM\JoinColumn(name="produit", nullable=false)
+     * @ORM\JoinColumn(name="produit")
      */
     private $produit;
 

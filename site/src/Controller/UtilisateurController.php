@@ -105,26 +105,21 @@ class UtilisateurController extends AbstractController
      * @Route("/delete/{id}", name="utilisateur_delete")
      * todo check id
      */
-    public function deleteAction(Utilisateur $utilisateur, UserAuthController $authController): Response
+    public function deleteAction(Utilisateur $utilisateur, UserAuthController $authController, PanierController $panierController): Response
     {
         if ($this->userType != 2)
             return $this->redirectToRoute("error");
 
-        if ($authController->getCurrentUser()->getId() == $utilisateur->getId()) {
+        if ($authController->getCurrentUser()->getId() == $utilisateur->getId())
             $this->addFlash('error', 'Impossible de supprimer un utilisateur actuellement authentifié');
-        }
-        else {
-            // à partir d'ici on est dans le cas d'un admin qui suppr un user.
+        else if (!empty($utilisateur->getPanier()))
+            $panierController->deletePanier($utilisateur, false);
 
-            if (!$utilisateur->getIsAdmin()) {
-                // todo gérer panier
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($utilisateur);
-            $entityManager->flush();
-        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($utilisateur);
+        $entityManager->flush();
 
         return $this->redirectToRoute('utilisateur_list');
     }
+
 }

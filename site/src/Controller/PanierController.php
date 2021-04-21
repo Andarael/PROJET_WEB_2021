@@ -101,27 +101,7 @@ class PanierController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('panier');
-    }
-
-    /**
-     * @Route("/acheter", name="panier_acheter")
-     * todo check id
-     */
-    public
-    function acheterPanierAction(UserAuthController $authController): Response
-    {
-        if ($this->userType != 1)
-            return $this->redirectToRoute('error');
-
-        $panier = $authController->getCurrentUser()->getPanier();
-
-        foreach ($panier as $lignePanier)
-            $this->deleteLignePanier($lignePanier, $authController->getCurrentUser(), true);
-
-        $this->addFlash('info', 'Commande prise en compte');
-
-        return $this->redirectToRoute('panier');
+        return $this->redirectToRoute('produit_list');
     }
 
     /**
@@ -156,6 +136,14 @@ class PanierController extends AbstractController
         return false;
     }
 
+    public function deletePanier(Utilisateur $utilisateur, bool $achat)
+    {
+        $panier = $utilisateur->getPanier();
+
+        foreach ($panier as $lignePanier)
+            $this->deleteLignePanier($lignePanier, $utilisateur, $achat);
+    }
+
     /**
      * @Route("/delte/{id}", name="ligne_panier_delete")
      */
@@ -173,18 +161,30 @@ class PanierController extends AbstractController
     /**
      * @Route("/delte/", name="panier_delete")
      */
-    public
-    function deletePanierAction(UserAuthController $authController): Response
+    public function deletePanierAction(UserAuthController $authController): Response
     {
         if ($this->userType != 1)
             return $this->redirectToRoute('error');
 
-        $panier = $authController->getCurrentUser()->getPanier();
-
-        foreach ($panier as $lignePanier)
-            $this->deleteLignePanier($lignePanier, $authController->getCurrentUser(), false);
+        $this->deletePanier($authController->getCurrentUser(), false);
 
         $this->addFlash('info', 'Panier vidé');
+
+        return $this->redirectToRoute('panier');
+    }
+
+    /**
+     * @Route("/acheter", name="panier_acheter")
+     */
+    public
+    function acheterPanierAction(UserAuthController $authController): Response
+    {
+        if ($this->userType != 1)
+            return $this->redirectToRoute('error');
+
+        $this->deletePanier($authController->getCurrentUser(), true);
+
+        $this->addFlash('info', 'Commande prise en compte');
 
         return $this->redirectToRoute('panier');
     }

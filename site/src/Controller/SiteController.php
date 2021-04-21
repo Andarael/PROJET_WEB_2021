@@ -26,8 +26,6 @@ class SiteController extends AbstractController
     /**
      * @Route ("/error", name="error")
      * Permet de générer une erreur 404 pour toutes les pages inconnues
-     *
-     * @return Response
      */
     public function errorAction(Session $session): Response
     {
@@ -46,7 +44,7 @@ class SiteController extends AbstractController
     public function indexAction(UserAuthController $authController): Response
     {
         $arg = ['userType' => $this->userType, 'user' => $authController->getCurrentUser()];
-        return $this->render("index.html.twig", $arg);
+        return $this->render("site/index.html.twig", $arg);
     }
 
     /**
@@ -84,7 +82,7 @@ class SiteController extends AbstractController
         if ($this->userType != 0)
             return $this->redirectToRoute("error");
 
-        return $this->render("login.html.twig");
+        return $this->render("site/login.html.twig");
     }
 
     /**

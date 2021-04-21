@@ -14,7 +14,7 @@
                     <th>Prix</th>
                     <th>Stock</th>
                     {% block th_action %}
-                        <th>Commander</th>
+                        <th>Commander <br> quantité</th>
                     {% endblock %}
 
                 </tr>
@@ -29,7 +29,7 @@
                     {% block td_action %}
                         {% if produit.qteStock > 0 %}
                             <td>
-                                <label for="qte_{{ produit.id }}">Quantité : </label>
+                                <label for="qte_{{ produit.id }}"></label>
                                 <select id="qte_{{ produit.id }}" name="qte_{{ produit.id }}">
                                     {% for quantite in 0..produit.qteStock %}
                                         <option value="{{ quantite }}">{{ quantite }}</option>

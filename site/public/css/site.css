@@ -1,0 +1,22 @@
+#content {
+    background-color: ghostwhite;
+    border: medium outset ;
+}
+
+* {
+    border-radius: 10px;
+}
+
+#flashError {
+    color: red;
+}
+
+#flashInfo {
+    color: limegreen;
+}
+
+tr,td  {
+    text-align: center;
+    padding-bottom: 1em;
+    vertical-align: top;
+}
