@@ -91,3 +91,5 @@ class LignePanier
         return $this;
     }
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

@@ -14,14 +14,15 @@ class LignePanierType extends AbstractType
         $builder
             ->add('quantite')
             ->add('produit')
-            ->add('utilisateur')
-        ;
+            ->add('utilisateur');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => LignePanier::class,
-        ]);
+                                   'data_class' => LignePanier::class,
+                               ]);
     }
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

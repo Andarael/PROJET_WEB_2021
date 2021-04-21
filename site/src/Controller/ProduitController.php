@@ -35,9 +35,8 @@ class ProduitController extends AbstractController
      */
     public function listAction(ProduitRepository $produitRepository): Response
     {
-        if(! $this->authController->isLogged())
+        if (!$this->authController->isLogged())
             return $this->redirectToRoute('error');
-
 
         return $this->render('produit/list.html.twig', ['produits' => $produitRepository->findAll()]);
     }
@@ -47,7 +46,7 @@ class ProduitController extends AbstractController
      */
     public function listAdminAction(ProduitRepository $produitRepository): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         return $this->render('produit/list_admin.html.twig', ['produits' => $produitRepository->findAll()]);
@@ -58,7 +57,7 @@ class ProduitController extends AbstractController
      */
     public function newAction(Request $request): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         $produit = new Produit();
@@ -83,7 +82,7 @@ class ProduitController extends AbstractController
      */
     public function editAction(Request $request, Produit $produit): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         $form = $this->createForm(ProduitType::class, $produit);
@@ -109,7 +108,7 @@ class ProduitController extends AbstractController
      */
     public function deleteAction(Produit $produit): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -119,3 +118,5 @@ class ProduitController extends AbstractController
         return $this->redirectToRoute('produit_list');
     }
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

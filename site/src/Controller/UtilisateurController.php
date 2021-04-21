@@ -36,7 +36,7 @@ class UtilisateurController extends AbstractController
      */
     public function UtilisateurListAction(UtilisateurRepository $utilisateurRepository): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         return $this->render("utilisateur/list.html.twig", ['utilisateurs' => $utilisateurRepository->findAll()]);
@@ -47,7 +47,7 @@ class UtilisateurController extends AbstractController
      */
     public function createAccountAction(Request $request): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         $utilisateur = new Utilisateur();
@@ -82,7 +82,7 @@ class UtilisateurController extends AbstractController
      */
     public function editAction(Request $request): Response
     {
-        if(! $this->authController->isLogged())
+        if (!$this->authController->isLogged())
             return $this->redirectToRoute('error');
 
         $utilisateur = $this->authController->getCurrentUser();
@@ -109,7 +109,7 @@ class UtilisateurController extends AbstractController
      */
     public function deleteAction(Utilisateur $utilisateur, PanierController $panierController): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         if ($this->authController->getCurrentUser()->getId() == $utilisateur->getId())
@@ -125,3 +125,5 @@ class UtilisateurController extends AbstractController
     }
 
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

@@ -5,17 +5,12 @@ namespace App\Controller;
 use App\Entity\Utilisateur;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Annotation\Route;
 
 class UserAuthController extends AbstractController
 {
 
     /** @var Utilisateur */
     private $currentUser;
-
-
 
     /**
      * Je passe par une méthode initialize plutôt que le constructeur.
@@ -51,21 +46,6 @@ class UserAuthController extends AbstractController
         return $this->currentUser;
     }
 
-    public function isAdmin(): ?bool
-    {
-        return $this->currentUser->getIsAdmin();
-    }
-
-    public function isAnon(): bool
-    {
-        return is_null($this->currentUser->getId());
-    }
-
-    public function isLogged(): bool
-    {
-        return (!$this->isAnon()) && (!$this->isAdmin());
-    }
-
     public function getUserType(): int
     {
         if ($this->isAdmin())
@@ -78,4 +58,21 @@ class UserAuthController extends AbstractController
             return -1;
     }
 
+    public function isAdmin(): ?bool
+    {
+        return $this->currentUser->getIsAdmin();
+    }
+
+    public function isLogged(): bool
+    {
+        return (!$this->isAnon()) && (!$this->isAdmin());
+    }
+
+    public function isAnon(): bool
+    {
+        return is_null($this->currentUser->getId());
+    }
+
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

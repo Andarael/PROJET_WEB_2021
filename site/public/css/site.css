@@ -1,6 +1,6 @@
 #content {
     background-color: ghostwhite;
-    border: medium outset ;
+    border: medium outset;
 }
 
 * {
@@ -15,8 +15,10 @@
     color: limegreen;
 }
 
-tr,td  {
+tr, td {
     text-align: center;
     padding-bottom: 1em;
     vertical-align: top;
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

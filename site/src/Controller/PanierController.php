@@ -36,7 +36,7 @@ class PanierController extends AbstractController
      */
     public function showAction(LignePanierRepository $lignePanierRepository): Response
     {
-        if(! $this->authController->isLogged())
+        if (!$this->authController->isLogged())
             return $this->redirectToRoute('error');
 
         return $this->render('panier/show.html.twig',
@@ -51,7 +51,7 @@ class PanierController extends AbstractController
      */
     public function addAction(Request $request, LignePanierRepository $lignePanierRepository, ProduitRepository $produitRepository): Response
     {
-        if(! $this->authController->isLogged())
+        if (!$this->authController->isLogged())
             return $this->redirectToRoute('error');
 
         // Vérification que le formulaire a été posté
@@ -104,6 +104,20 @@ class PanierController extends AbstractController
     }
 
     /**
+     * @Route("/delete/{id}", name="ligne_panier_delete")
+     */
+    public
+    function deleteLignePanierAction(LignePanier $lignePanier): Response
+    {
+        if (!$this->authController->isLogged())
+            return $this->redirectToRoute('error');
+
+        $this->deleteLignePanier($lignePanier, $this->authController->getCurrentUser(), false);
+
+        return $this->redirectToRoute('panier');
+    }
+
+    /**
      * Supprime la ligne panier d'un utilisateur.
      * Renvoie un bool pour tester si la suppression s'est bien passée
      *
@@ -135,30 +149,8 @@ class PanierController extends AbstractController
         return false;
     }
 
-    public function deletePanier(Utilisateur $utilisateur, bool $achat)
-    {
-        $panier = $utilisateur->getPanier();
-
-        foreach ($panier as $lignePanier)
-            $this->deleteLignePanier($lignePanier, $utilisateur, $achat);
-    }
-
     /**
-     * @Route("/delte/{id}", name="ligne_panier_delete")
-     */
-    public
-    function deleteLignePanierAction(LignePanier $lignePanier): Response
-    {
-        if(! $this->authController->isLogged())
-            return $this->redirectToRoute('error');
-
-        $this->deleteLignePanier($lignePanier, $this->authController->getCurrentUser(), false);
-
-        return $this->redirectToRoute('panier');
-    }
-
-    /**
-     * @Route("/delte/", name="panier_delete")
+     * @Route("/delete/", name="panier_delete")
      */
     public function deletePanierAction(): Response
     {
@@ -172,13 +164,21 @@ class PanierController extends AbstractController
         return $this->redirectToRoute('panier');
     }
 
+    public function deletePanier(Utilisateur $utilisateur, bool $achat)
+    {
+        $panier = $utilisateur->getPanier();
+
+        foreach ($panier as $lignePanier)
+            $this->deleteLignePanier($lignePanier, $utilisateur, $achat);
+    }
+
     /**
      * @Route("/acheter", name="panier_acheter")
      */
     public
     function acheterPanierAction(UserAuthController $authController): Response
     {
-        if(! $this->authController->isLogged())
+        if (!$this->authController->isLogged())
             return $this->redirectToRoute('error');
 
         $this->deletePanier($authController->getCurrentUser(), true);
@@ -189,3 +189,5 @@ class PanierController extends AbstractController
     }
 
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

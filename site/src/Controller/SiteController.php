@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Produit;
 use App\Service\ReverseService;
-use PhpParser\Node\Scalar\String_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -81,7 +80,7 @@ class SiteController extends AbstractController
      */
     public function loginAction(): Response
     {
-        if(! $this->authController->isAdmin())
+        if (!$this->authController->isAdmin())
             return $this->redirectToRoute('error');
 
         return $this->render("site/login.html.twig");
@@ -103,12 +102,13 @@ class SiteController extends AbstractController
     /**
      * @Route("/reverse/{str}", name="reverse")
      */
-    public function reverseAction(String $str, ReverseService $reverseService): Response
+    public function reverseAction(string $str, ReverseService $reverseService): Response
     {
-
         $reversed = $reverseService->reverseString($str);
 
-        return $this->render('site/reverse.html.twig', ['str' => $str, 'reversed' => $reversed ]);
+        return $this->render('site/reverse.html.twig', ['str' => $str, 'reversed' => $reversed]);
     }
 
 }
+
+/*Fichier par josué Raad et Florian Portrait*/

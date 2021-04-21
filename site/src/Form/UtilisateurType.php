@@ -28,3 +28,5 @@ class UtilisateurType extends AbstractType
         $resolver->setDefaults(['data_class' => Utilisateur::class,]);
     }
 }
+
+/*Fichier par josué Raad et Florian Portrait*/
