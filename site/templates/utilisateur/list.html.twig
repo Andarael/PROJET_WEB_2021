@@ -29,7 +29,9 @@
                 <td>{{ utilisateur.anniversaire ? utilisateur.anniversaire|date('Y-m-d') : '' }}</td>
                 <td>{{ utilisateur.isAdmin ? 'Oui' : 'Non' }}</td>
                 <td>
-                    <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}"><button class="btn">Supprimer</button></a>
+                    <form action="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">
+                        <button class="btn">Supprimer</button>
+                    </form>
                 </td>
             </tr>
         {% else %}

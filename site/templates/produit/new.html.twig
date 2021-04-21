@@ -5,5 +5,8 @@
 {% block content %}
     <h1>Ajout de Produit</h1>
 
-    {{ include('produit/_form.html.twig') }}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+
 {% endblock %}

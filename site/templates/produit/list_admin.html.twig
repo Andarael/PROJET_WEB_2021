@@ -6,7 +6,8 @@
 
 {% block td_action %}
     <td>
-        <a href="{{ path('produit_edit', {'id': produit.id}) }}"><button>éditer</button></a>
+        {#Je surcharge l'action du formulaire dans le bouton 'éditer' pour éviter d'être redirigé vers '/panier/add'#}
+        <button formaction="{{ path('produit_edit', {'id': produit.id}) }}">éditer</button>
     </td>
 {% endblock %}
 
@@ -14,7 +15,5 @@
 
 {% block content %}
     {{ parent() }}
-    <p>
-        <a href="{{ path('produit_new') }}"><button>Ajouter un nouveau</button></a>
-    </p>
+    <p> <a href="{{ path('produit_new') }}"><button>Ajouter un nouveau</button></a> </p>
 {% endblock %}

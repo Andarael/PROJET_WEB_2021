@@ -1,0 +1,56 @@
+{% extends 'default/site.html.twig' %}
+
+{% block title %}Panier{% endblock %}
+
+{% block content %}
+    <h1>Votre panier</h1>
+
+    {% set total = 0 %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix u.</th>
+                <th>Qte</th>
+                <th>Prix (total)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ligne_panier in ligne_paniers %}
+            {% set prixTotal = ligne_panier.produit.prix * ligne_panier.quantite %}
+            {% set total = prixTotal + total %}
+            <tr>
+                <td>{{ ligne_panier.produit.libelle }}</td>
+                <td>{{ ligne_panier.produit.prix }}€ </td>
+                <td>{{ ligne_panier.quantite }}</td>
+                <td>{{ prixTotal }}€</td>
+                <td>
+                    <form action="{{ path('ligne_panier_delete', {'id': ligne_panier.id}) }}"><button>suppr</button></form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Votre panier est vide</td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td {# colspan="3" #}>Total</td>
+                <td>{{ total }}€</td>
+            </tr>
+        </tbody>
+    </table>
+    {# On n'a pas le droit de mettres des boutons dans les balises <a> selon HTML5. Donc on passe par des form #}
+    <p>
+        {# todo #}
+        <form style="display: inline" action="{{ path('panier_acheter') }}"><button>Acheter</button></form>
+
+        <form style="display: inline" action="{{ path('panier_delete') }}"><button>Vider</button></form>
+
+
+
+{% endblock %}

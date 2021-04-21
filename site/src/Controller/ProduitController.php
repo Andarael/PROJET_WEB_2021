@@ -6,7 +6,6 @@ use App\Entity\Produit;
 use App\Form\ProduitType;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,8 +32,8 @@ class ProduitController extends AbstractController
      */
     public function listAction(ProduitRepository $produitRepository): Response
     {
-//        if ($this->userType != 1)
-//            return $this->redirectToRoute("error");
+        if ($this->userType != 1)
+            return $this->redirectToRoute("error");
 
         return $this->render('produit/list.html.twig', ['produits' => $produitRepository->findAll()]);
     }
@@ -67,15 +66,16 @@ class ProduitController extends AbstractController
             $entityManager->persist($produit);
             $entityManager->flush();
 
-            return $this->redirectToRoute('produit_list');
+            $this->addFlash('info', 'Produit ajouté');
+            return $this->redirectToRoute('index');
         }
 
         return $this->render('produit/new.html.twig', ['produit' => $produit, 'form' => $form->createView(),]);
     }
 
     /**
-     * todo check id
      * @Route("/edit/{id}", name="produit_edit", methods={"GET","POST"})
+     * @todo check id
      */
     public function editAction(Request $request, Produit $produit): Response
     {
@@ -83,6 +83,8 @@ class ProduitController extends AbstractController
             return $this->redirectToRoute("error");
 
         $form = $this->createForm(ProduitType::class, $produit);
+        $form->remove("libelle");
+        $form->remove("id");
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -100,7 +102,7 @@ class ProduitController extends AbstractController
      * todo check id
      * @Route("/delete/{id}", name="produit_delete")
      */
-    public function deleteAction(Request $request, Produit $produit): Response
+    public function deleteAction(Produit $produit): Response
     {
         if ($this->userType != 2)
             return $this->redirectToRoute("error");

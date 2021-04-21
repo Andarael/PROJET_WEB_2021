@@ -5,15 +5,11 @@ namespace App\Controller;
 use App\Entity\Produit;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SiteController extends AbstractController
 {
-
-    /** @var UserAuthController */
-    private $authController;
-
     /** @var int */
     private $userType;
 
@@ -24,7 +20,6 @@ class SiteController extends AbstractController
      */
     public function __construct(UserAuthController $authController)
     {
-        $this->authController = $authController;
         $this->userType = $authController->getUserType();
     }
 
@@ -34,19 +29,23 @@ class SiteController extends AbstractController
      *
      * @return Response
      */
-    public function errorAction(): Response
+    public function errorAction(Session $session): Response
     {
-        throw new NotFoundHttpException("page inconnue");
+        // si on a été redirigé ici sans message d'erreur c'est que l'on n'a pas les droits
+        $errorFlashes = $session->getFlashBag()->get('error');
+        if (empty($errorFlashes))
+            $this->addFlash('error', "vous n'avez pas les droits pour cette page");
+
+        return $this->redirectToRoute('index');
+//        throw new NotFoundHttpException("page inconnue");
     }
 
     /**
      * @Route("/", name="index")
      */
-    public function indexAction(): Response
+    public function indexAction(UserAuthController $authController): Response
     {
-        $utilisateur = $this->authController->getCurrentUser();
-
-        $arg = ['userType' => $this->userType, 'user' => $utilisateur];
+        $arg = ['userType' => $this->userType, 'user' => $authController->getCurrentUser()];
         return $this->render("index.html.twig", $arg);
     }
 
@@ -93,8 +92,7 @@ class SiteController extends AbstractController
      */
     public function logoutAction(): Response
     {
-        $userType = $this->userType;
-        if ($userType == 0)
+        if ($this->userType == 0)
             return $this->redirectToRoute("error");
 
         $this->addFlash('info', 'Déconnexion réussie');

@@ -1,1 +1,2 @@
 config/services.yaml
+config/package/dev/web_profiler

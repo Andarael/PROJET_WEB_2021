@@ -5,40 +5,54 @@
 {% block content %}
     <h1>Liste des produits</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Libellé</th>
-                <th>Prix</th>
-                <th>Stock</th>
-                {% block th_action %} <th>Choix</th>{% endblock %}
+    <form method="post" action="{% block destination %}{{ path('add_panier') }} {% endblock %}">
 
-            </tr>
-        </thead>
-        <tbody>
-        {% for produit in produits %}
-            <tr>
-                <td>{{ produit.libelle }}</td>
-                <td>{{ produit.prix }} €</td>
-                <td>{{ produit.qteStock }}</td>
-                {% block td_action %}
-                    {# todo liste déroulante #}
-                    <td>liste déroulante</td>
-                {% endblock %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Libellé</th>
+                    <th>Prix</th>
+                    <th>Stock</th>
+                    {% block th_action %}
+                        <th>Commander</th>
+                    {% endblock %}
 
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+            </thead>
+            <tbody>
+            {% for produit in produits %}
+                <tr>
+                    <td>{{ produit.libelle }}</td>
+                    <td>{{ produit.prix }}€</td>
+                    <td>{{ produit.qteStock }}</td>
 
-    {% block add_cart %}
-        {#todo#}
-        <a><button>Ajouter au panier</button></a>
-    {% endblock %}
+                    {% block td_action %}
+                        {% if produit.qteStock > 0 %}
+                            <td>
+                                <label for="qte_{{ produit.id }}">Quantité : </label>
+                                <select id="qte_{{ produit.id }}" name="qte_{{ produit.id }}">
+                                    {% for quantite in 0..produit.qteStock %}
+                                        <option value="{{ quantite }}">{{ quantite }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        {% endif %}
+                    {% endblock %}
+
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun produit en magasin</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% block add_cart %}
+            <p><input type="submit" name="submitted" value="Ajouter au panier" /></p>
+        {% endblock %}
+
+    </form>
 
 
 {% endblock %}
