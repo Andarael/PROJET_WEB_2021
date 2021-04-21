@@ -1,3 +1,7 @@
 se placer dans site/public  et executer 
 'symfony serve' 
 ça ouvre sur 'localhost:8000/'
+
+'symfony serve -d' pour lancer en arrière plan
+
+'symfony server:stop' pour arrêter le serveur en arrière plan

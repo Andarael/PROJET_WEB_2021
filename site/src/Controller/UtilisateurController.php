@@ -16,7 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UtilisateurController extends AbstractController
 {
-    private $userType;
+    /** @var UserAuthController */
+    private $authController;
 
     /**
      * UtilisateurController constructor.
@@ -25,7 +26,9 @@ class UtilisateurController extends AbstractController
      */
     public function __construct(UserAuthController $authController)
     {
-        $this->userType = $authController->getUserType();
+        $this->authController = $authController;
+
+        $authController->initialize();
     }
 
     /**
@@ -33,8 +36,8 @@ class UtilisateurController extends AbstractController
      */
     public function UtilisateurListAction(UtilisateurRepository $utilisateurRepository): Response
     {
-        if ($this->userType != 2)
-            return $this->redirectToRoute("error");
+        if(! $this->authController->isAdmin())
+            return $this->redirectToRoute('error');
 
         return $this->render("utilisateur/list.html.twig", ['utilisateurs' => $utilisateurRepository->findAll()]);
     }
@@ -44,8 +47,8 @@ class UtilisateurController extends AbstractController
      */
     public function createAccountAction(Request $request): Response
     {
-        if ($this->userType != 0)
-            return $this->redirectToRoute("error");
+        if(! $this->authController->isAdmin())
+            return $this->redirectToRoute('error');
 
         $utilisateur = new Utilisateur();
 
@@ -77,12 +80,12 @@ class UtilisateurController extends AbstractController
     /**
      * @Route("/edit", name="utilisateur_edit", methods={"GET","POST"})
      */
-    public function editAction(Request $request, UserAuthController $authController): Response
+    public function editAction(Request $request): Response
     {
-        if ($this->userType != 1)
-            return $this->redirectToRoute("error");
+        if(! $this->authController->isLogged())
+            return $this->redirectToRoute('error');
 
-        $utilisateur = $authController->getCurrentUser();
+        $utilisateur = $this->authController->getCurrentUser();
 
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->add('valider', SubmitType::class, ['label' => 'valider']);
@@ -104,12 +107,12 @@ class UtilisateurController extends AbstractController
      * @Route("/delete/{id}", name="utilisateur_delete")
      * todo check id
      */
-    public function deleteAction(Utilisateur $utilisateur, UserAuthController $authController, PanierController $panierController): Response
+    public function deleteAction(Utilisateur $utilisateur, PanierController $panierController): Response
     {
-        if ($this->userType != 2)
-            return $this->redirectToRoute("error");
+        if(! $this->authController->isAdmin())
+            return $this->redirectToRoute('error');
 
-        if ($authController->getCurrentUser()->getId() == $utilisateur->getId())
+        if ($this->authController->getCurrentUser()->getId() == $utilisateur->getId())
             $this->addFlash('error', 'Impossible de supprimer un utilisateur actuellement authentifié');
         else if (!empty($utilisateur->getPanier()))
             $panierController->deletePanier($utilisateur, false);

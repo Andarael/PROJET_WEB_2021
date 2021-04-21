@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Produit;
+use App\Service\ReverseService;
+use PhpParser\Node\Scalar\String_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -10,8 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SiteController extends AbstractController
 {
-    /** @var int */
-    private $userType;
+
+    /** @var UserAuthController */
+    private $authController;
 
     /**
      * SiteController constructor.
@@ -20,7 +23,8 @@ class SiteController extends AbstractController
      */
     public function __construct(UserAuthController $authController)
     {
-        $this->userType = $authController->getUserType();
+        $this->authController = $authController;
+        $authController->initialize();
     }
 
     /**
@@ -31,6 +35,7 @@ class SiteController extends AbstractController
     {
         // si on a été redirigé ici sans message d'erreur c'est que l'on n'a pas les droits
         $errorFlashes = $session->getFlashBag()->get('error');
+
         if (empty($errorFlashes))
             $this->addFlash('error', "vous n'avez pas les droits pour cette page");
 
@@ -43,7 +48,7 @@ class SiteController extends AbstractController
      */
     public function indexAction(UserAuthController $authController): Response
     {
-        $arg = ['userType' => $this->userType, 'user' => $authController->getCurrentUser()];
+        $arg = ['userType' => $this->authController->getUserType(), 'user' => $authController->getCurrentUser()];
         return $this->render("site/index.html.twig", $arg);
     }
 
@@ -52,8 +57,6 @@ class SiteController extends AbstractController
      */
     public function menuAction(): Response
     {
-        $userType = $this->userType;
-
         // j'interprète le nombre de produit dans la base de donnée comme le nombre de produit différents dans la base
         // Pour le nombre de produit en stock, il faudrait un findAll() et un Foreach()
         $nbProducts = $this->getDoctrine()
@@ -61,7 +64,7 @@ class SiteController extends AbstractController
                            ->getRepository(Produit::class)
                            ->count([]);
 
-        $arg = ['nbProducts' => $nbProducts, 'userType' => $userType];
+        $arg = ['nbProducts' => $nbProducts, 'userType' => $this->authController->getUserType()];
         return $this->render("default/_menu.html.twig", $arg);
     }
 
@@ -70,8 +73,7 @@ class SiteController extends AbstractController
      */
     public function headerAction(): Response
     {
-        $userType = $this->userType;
-        return $this->render("default/_header.html.twig", ['userType' => $userType]);
+        return $this->render("default/_header.html.twig", ['userType' => $this->authController->getUserType()]);
     }
 
     /**
@@ -79,8 +81,8 @@ class SiteController extends AbstractController
      */
     public function loginAction(): Response
     {
-        if ($this->userType != 0)
-            return $this->redirectToRoute("error");
+        if(! $this->authController->isAdmin())
+            return $this->redirectToRoute('error');
 
         return $this->render("site/login.html.twig");
     }
@@ -90,12 +92,23 @@ class SiteController extends AbstractController
      */
     public function logoutAction(): Response
     {
-        if ($this->userType == 0)
+        if ($this->authController->getUserType() == 0)
             return $this->redirectToRoute("error");
 
         $this->addFlash('info', 'Déconnexion réussie');
 
         return $this->redirectToRoute("index");
+    }
+
+    /**
+     * @Route("/reverse/{str}", name="reverse")
+     */
+    public function reverseAction(String $str, ReverseService $reverseService): Response
+    {
+
+        $reversed = $reverseService->reverseString($str);
+
+        return $this->render('site/reverse.html.twig', ['str' => $str, 'reversed' => $reversed ]);
     }
 
 }

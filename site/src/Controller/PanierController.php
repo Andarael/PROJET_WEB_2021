@@ -16,7 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PanierController extends AbstractController
 {
-    private $userType;
+    /** @var UserAuthController */
+    private $authController;
 
     /**
      * LignePanierController constructor.
@@ -25,22 +26,21 @@ class PanierController extends AbstractController
      */
     public function __construct(UserAuthController $authController)
     {
-        $this->userType = $authController->getUserType(); // on instancie le type d'utilisateur
+        $this->authController = $authController;
+        $authController->initialize();
     }
 
     /**
      * On visualise tout un panier, pas une ligne de panier
      * @Route("/", name="panier")
      */
-    public function showAction(LignePanierRepository $lignePanierRepository, UserAuthController $authController): Response
+    public function showAction(LignePanierRepository $lignePanierRepository): Response
     {
-        if ($this->userType != 1)
+        if(! $this->authController->isLogged())
             return $this->redirectToRoute('error');
 
-        $currentUser = $authController->getCurrentUser();
-
         return $this->render('panier/show.html.twig',
-                             ['ligne_paniers' => $lignePanierRepository->findBy(['utilisateur' => $currentUser])]);
+                             ['ligne_paniers' => $lignePanierRepository->findBy(['utilisateur' => $this->authController->getCurrentUser()])]);
     }
 
     /**
@@ -49,16 +49,16 @@ class PanierController extends AbstractController
      *
      * Pour éviter qu'une erreur symfony apparaisse, 'methods={"POST"}' est géré dans l'action
      */
-    public function addAction(Request $request, LignePanierRepository $lignePanierRepository, ProduitRepository $produitRepository, UserAuthController $authController): Response
+    public function addAction(Request $request, LignePanierRepository $lignePanierRepository, ProduitRepository $produitRepository): Response
     {
-        if ($this->userType != 1)
+        if(! $this->authController->isLogged())
             return $this->redirectToRoute('error');
 
         // Vérification que le formulaire a été posté
         if ($request->get('submitted') === null)
             return $this->redirectToRoute('panier');
 
-        $utilisateur = $authController->getCurrentUser();
+        $utilisateur = $this->authController->getCurrentUser();
 
         // On parcours tous les produits,
         // si on a commandé ce produit, et s'il est en stock
@@ -147,12 +147,12 @@ class PanierController extends AbstractController
      * @Route("/delte/{id}", name="ligne_panier_delete")
      */
     public
-    function deleteLignePanierAction(LignePanier $lignePanier, UserAuthController $authController): Response
+    function deleteLignePanierAction(LignePanier $lignePanier): Response
     {
-        if ($this->userType != 1)
+        if(! $this->authController->isLogged())
             return $this->redirectToRoute('error');
 
-        $this->deleteLignePanier($lignePanier, $authController->getCurrentUser(), false);
+        $this->deleteLignePanier($lignePanier, $this->authController->getCurrentUser(), false);
 
         return $this->redirectToRoute('panier');
     }
@@ -160,12 +160,12 @@ class PanierController extends AbstractController
     /**
      * @Route("/delte/", name="panier_delete")
      */
-    public function deletePanierAction(UserAuthController $authController): Response
+    public function deletePanierAction(): Response
     {
-        if ($this->userType != 1)
+        if ($this->authController != 1)
             return $this->redirectToRoute('error');
 
-        $this->deletePanier($authController->getCurrentUser(), false);
+        $this->deletePanier($this->authController->getCurrentUser(), false);
 
         $this->addFlash('info', 'Panier vidé');
 
@@ -178,7 +178,7 @@ class PanierController extends AbstractController
     public
     function acheterPanierAction(UserAuthController $authController): Response
     {
-        if ($this->userType != 1)
+        if(! $this->authController->isLogged())
             return $this->redirectToRoute('error');
 
         $this->deletePanier($authController->getCurrentUser(), true);
