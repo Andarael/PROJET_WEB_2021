@@ -93,7 +93,7 @@ class PanierController extends AbstractController
                 // Si on voulait ajouter la qte voulue à une ligne déjà existante on pourrait le faire ici
                 if ($count == 1) {
                     $this->addFlash('error', $produit->getLibelle() . " est déjà dans le panier");
-                    return $this->redirectToRoute('produit_list');
+                    return $this->redirectToRoute('panier');
                 }
 
                 // On crée une nouvelle ligne de panier

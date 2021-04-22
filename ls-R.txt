@@ -1,2 +1,3 @@
-config/services.yaml
-config/package/dev/web_profiler
+fichiers modifiés dans /config: 
+
+- config/services.yaml

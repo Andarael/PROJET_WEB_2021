@@ -21,7 +21,7 @@ class Utilisateur
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="pk", type="integer", length=4, scale=4)
+     * @ORM\Column(name="pk", type="integer")
      */
     private $id;
 
