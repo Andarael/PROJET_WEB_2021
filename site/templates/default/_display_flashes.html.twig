@@ -1,3 +1,6 @@
+{#Ce template est inclus dans tous le site pour permettre l'affichage des flash peu importe la page
+C'est nottament utile pour afficher une erreur après une redirection sur la page d'accueil #}
+
 <div id="flashInfo">
         <ul>
             {% for message in app.session.flashBag.get('info') %}

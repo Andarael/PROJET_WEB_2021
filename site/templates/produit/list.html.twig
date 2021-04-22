@@ -3,6 +3,7 @@
 {% block title %}Liste des Produits{% endblock %}
 
 {% block content %}
+
     <h1>Liste des produits</h1>
 
     <form method="post" action="{% block destination %}{{ path('add_panier') }} {% endblock %}">
@@ -53,7 +54,6 @@
         {% endblock %}
 
     </form>
-
 
 {% endblock %}
 

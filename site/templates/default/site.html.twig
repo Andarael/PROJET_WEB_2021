@@ -9,6 +9,11 @@
 
 {% block body %}
 
+    {#Note sur les routes du header et du menu :
+    On aurai pu écrir 'en dur' les actions à appeler pour afficher les fragments de template
+    Cela aurait évité que l'utilisateur puisse accéder à '/menu' par exemple.
+    Mais par soucis de simplicité du code on a opté pour l'affichage des fragments via les routes #}
+
     <div id="header">
         {% block header %}
             {{ render(path("header")) }}

@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table(name="im2021_utilisateurs", options={"COMMENT":"Table des utilisateurs du site"})
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
- * @UniqueEntity("identifiant", message="Ce login est déjà pris")
+ *
+ * @UniqueEntity("identifiant", message="Ce login est déjà pris") // on pourait le mettre avec un assert sur la variable également
  */
 class Utilisateur
 {
@@ -21,9 +22,6 @@ class Utilisateur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(name="pk", type="integer", length=4, scale=4)
-     *
-     * //columnDefinition="COMMENT 'This is a column comment'
-     * todo commentaires de la table
      */
     private $id;
 
@@ -66,6 +64,8 @@ class Utilisateur
     private $isAdmin;
 
     /**
+     * j'appel la collection de lignes_panier un 'panier', donc la variable n'est pas au pluriel.
+     *
      * @ORM\OneToMany(targetEntity=LignePanier::class, mappedBy="utilisateur", orphanRemoval=true)
      */
     private $panier;

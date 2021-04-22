@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
  * @ORM\Table(name="im2021_lignes_panier",
  *     uniqueConstraints={@UniqueConstraint(name="usr_prod", columns={"utilisateur","produit"})})
  *
- * // contrainte pour les coupes utilisateur/produit soient unique
- * // On garde la clé primaire 'id' pour plus de simplicité dans la gestion des lignes
+ * Les contrainte sont là pour les coupes (utilisateur, produit) soient uniques
+ * On garde la clé primaire 'id' pour plus de simplicité dans la gestion des lignes dans Symfony
  */
 class LignePanier
 {
@@ -55,7 +55,7 @@ class LignePanier
         return $this->id;
     }
 
-    public function getProduit(): ?Produit
+    public function getProduit(): Produit
     {
         return $this->produit;
     }
@@ -67,7 +67,7 @@ class LignePanier
         return $this;
     }
 
-    public function getUtilisateur(): ?utilisateur
+    public function getUtilisateur(): utilisateur
     {
         return $this->utilisateur;
     }
@@ -79,7 +79,7 @@ class LignePanier
         return $this;
     }
 
-    public function getQuantite(): ?int
+    public function getQuantite(): int
     {
         return $this->quantite;
     }

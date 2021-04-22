@@ -2,52 +2,62 @@
 
 namespace App\Controller;
 
+use App\Service\UserAuth;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Repository\UtilisateurRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
+ * Controller pour la gestion des utilisateurs. (Créer, éditer, supprimer)
+ *
  * @Route("/utilisateur")
  */
 class UtilisateurController extends AbstractController
 {
-    /** @var UserAuthController */
-    private $authController;
+    /** @var UserAuth
+     * Pour gérer l'utilisateur actuellement authentifié
+     */
+    private $auth;
 
     /**
      * UtilisateurController constructor.
      *
-     * @param UserAuthController $authController
+     * @param UserAuth $auth
      */
-    public function __construct(UserAuthController $authController)
+    public function __construct(UserAuth $auth)
     {
-        $this->authController = $authController;
-
-        $authController->initialize();
+        $this->auth = $auth;
     }
 
     /**
+     * La route pour lister les utilisateurs à l'admin
+     *
      * @Route("/list", name="utilisateur_list")
      */
     public function UtilisateurListAction(UtilisateurRepository $utilisateurRepository): Response
     {
-        if (!$this->authController->isAdmin())
+        if (!$this->auth->isAdmin())
             return $this->redirectToRoute('error');
 
         return $this->render("utilisateur/list.html.twig", ['utilisateurs' => $utilisateurRepository->findAll()]);
     }
 
     /**
+     * Route pour créer un nouveau compte
+     *
+     * Seul un anonyme peut créer un compte
+     * La validation est faite automatiquement par les assertions dans la classe Utilisateur
+     *
      * @Route("/create_account", name="create_account")
      */
     public function createAccountAction(Request $request): Response
     {
-        if (!$this->authController->isAdmin())
+        if (!$this->auth->isAnon())
             return $this->redirectToRoute('error');
 
         $utilisateur = new Utilisateur();
@@ -70,22 +80,19 @@ class UtilisateurController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="utilisateur_new", methods={"GET","POST"})
-     */
-    public function newAction(): Response
-    {
-        return $this->redirectToRoute("create_account");
-    }
-
-    /**
+     * Route pour éditer son profil utilisateur
+     *
+     * On est automatiquement dirigé vers le profil de l'utilisateur actuellement authentifié
+     * L'admin ne peut pas éditer son profil, conformément au sujet
+     *
      * @Route("/edit", name="utilisateur_edit", methods={"GET","POST"})
      */
     public function editAction(Request $request): Response
     {
-        if (!$this->authController->isLogged())
+        if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
-        $utilisateur = $this->authController->getCurrentUser();
+        $utilisateur = $this->auth->getCurrentUser();
 
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->add('valider', SubmitType::class, ['label' => 'valider']);
@@ -104,15 +111,32 @@ class UtilisateurController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="utilisateur_delete")
-     * todo check id
+     * Route pour supprimer un utilisateur de la base, par son Id
+     *
+     * On suppr un utilistateur en prenant soin de vider son panier avant.
+     * C'est pour cela qu'on a besoin d'un PanierController
+     * L'appel à viderPanier s'assure que les produits sont remis en stock
+     *
+     * On ne peut pas supprimer l'utilisateur actuellement connecté
+     * En particulier ici on vérifie l'id de l'utilisateur à supprimer.
+     * Une redirection vers la route d'erreur est effectuée si l'utilisateur n'existe pas dans la base
+     *
+     * @Route("/delete/{id}", name="utilisateur_delete", requirements={"id" : "[1-9]\d*"})
      */
-    public function deleteAction(Utilisateur $utilisateur, PanierController $panierController): Response
+    public function deleteAction($id, PanierController $panierController): Response
     {
-        if (!$this->authController->isAdmin())
+        if (!$this->auth->isAdmin())
             return $this->redirectToRoute('error');
 
-        if ($this->authController->getCurrentUser()->getId() == $utilisateur->getId())
+        /** @var Utilisateur $utilisateur */
+        $utilisateur = $this->getDoctrine()->getRepository(UtilisateurRepository::class)->find($id);
+
+        if (is_null($utilisateur)) {
+            $this->addFlash('info', "L'utilisateur n'existe pas");
+            $this->redirectToRoute('error');
+        }
+
+        if ($this->auth->getCurrentUser()->getId() == $utilisateur->getId())
             $this->addFlash('error', 'Impossible de supprimer un utilisateur actuellement authentifié');
         else if (!empty($utilisateur->getPanier()))
             $panierController->deletePanier($utilisateur, false);

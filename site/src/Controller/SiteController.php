@@ -3,35 +3,45 @@
 namespace App\Controller;
 
 use App\Entity\Produit;
+use App\Service\UserAuth;
 use App\Service\ReverseService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SiteController extends AbstractController
 {
 
-    /** @var UserAuthController */
-    private $authController;
+    /**
+     * @var UserAuth
+     * Pour gérer l'utilisateur actuellement authentifié
+     */
+    private $auth;
 
     /**
      * SiteController constructor.
      *
-     * @param UserAuthController $authController
+     * @param UserAuth $auth
      */
-    public function __construct(UserAuthController $authController)
+    public function __construct(UserAuth $auth)
     {
-        $this->authController = $authController;
-        $authController->initialize();
+        $this->auth = $auth;
     }
 
     /**
+     * Route d'erreur du site. On ne lève pas une erreur 404 pour le moment.
+     * Mais on redirige vers la page d'accueil avec un message explicatif.
+     * Pour rediriger vers une erreur 404 comme demandé, il suffit de dé-commenter la première ligne de la fonction
+     *
      * @Route ("/error", name="error")
      * Permet de générer une erreur 404 pour toutes les pages inconnues
      */
     public function errorAction(Session $session): Response
     {
+        // throw new NotFoundHttpException("page inconnue");
+
         // si on a été redirigé ici sans message d'erreur c'est que l'on n'a pas les droits
         $errorFlashes = $session->getFlashBag()->get('error');
 
@@ -39,19 +49,23 @@ class SiteController extends AbstractController
             $this->addFlash('error', "vous n'avez pas les droits pour cette page");
 
         return $this->redirectToRoute('index');
-//        throw new NotFoundHttpException("page inconnue");
     }
 
     /**
+     * Page d' accueil du site
+     *
      * @Route("/", name="index")
      */
-    public function indexAction(UserAuthController $authController): Response
+    public function indexAction(): Response
     {
-        $arg = ['userType' => $this->authController->getUserType(), 'user' => $authController->getCurrentUser()];
+        $arg = ['userType' => $this->auth->getUserType(), 'user' => $this->auth->getCurrentUser()];
         return $this->render("site/index.html.twig", $arg);
     }
 
     /**
+     * Route pour afficher le menu du site
+     * L'affichage du menu seul n'est pas conforme aux normes HTML, c'est un fragment de template
+     *
      * @Route("/menu", name="menu")
      */
     public function menuAction(): Response
@@ -63,35 +77,42 @@ class SiteController extends AbstractController
                            ->getRepository(Produit::class)
                            ->count([]);
 
-        $arg = ['nbProducts' => $nbProducts, 'userType' => $this->authController->getUserType()];
+        $arg = ['nbProducts' => $nbProducts, 'userType' => $this->auth->getUserType()];
         return $this->render("default/_menu.html.twig", $arg);
     }
 
     /**
+     * Route pour afficher le header du site
+     * L'affichage du header seul n'est pas conforme aux normes HTML, c'est un fragment de template
+     *
      * @Route("/header", name="header")
      */
     public function headerAction(): Response
     {
-        return $this->render("default/_header.html.twig", ['userType' => $this->authController->getUserType()]);
+        return $this->render("default/_header.html.twig", ['userType' => $this->auth->getUserType()]);
     }
 
     /**
+     * Route pour l'authentification
+     *
      * @Route("/login", name="login")
      */
     public function loginAction(): Response
     {
-        if (!$this->authController->isAdmin())
+        if (!$this->auth->isAnon())
             return $this->redirectToRoute('error');
 
         return $this->render("site/login.html.twig");
     }
 
     /**
+     * Route pour la déconnexion
+     *
      * @Route("/logout", name="logout")
      */
     public function logoutAction(): Response
     {
-        if ($this->authController->getUserType() == 0)
+        if ($this->auth->isAnon())
             return $this->redirectToRoute("error");
 
         $this->addFlash('info', 'Déconnexion réussie');
@@ -100,7 +121,9 @@ class SiteController extends AbstractController
     }
 
     /**
-     * @Route("/reverse/{str}", name="reverse")
+     * Route pour le service d'inversion de String avec valeur par défaut
+     *
+     * @Route("/reverse/{str}", name="reverse", defaults={"str" : "Nabuchodonosor"})
      */
     public function reverseAction(string $str, ReverseService $reverseService): Response
     {

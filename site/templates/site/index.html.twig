@@ -9,6 +9,7 @@
 
 
 {% block content %}
+
     {{ parent() }}
 
     <h1>Site de vente (WEB 2021)</h1>
@@ -24,6 +25,8 @@
     {% elseif userType ==2 %}
         <p>Vous êtes un administrateur !</p>
     {% endif %}
+
+    <p><a href="{{ path("reverse") }}">tester le service</a></p>
 
 {% endblock %}
 

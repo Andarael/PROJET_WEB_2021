@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\UserAuth;
 use App\Entity\LignePanier;
 use App\Entity\Utilisateur;
 use App\Repository\LignePanierRepository;
@@ -12,53 +13,64 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
+ * Controller pour la gestion du panier
+ * On n'a jamais accès aux paniers de tout les utilisateurs.
+ * Les routes dirigent seulement vers le panier de l'utilisateur actuel
+ *
  * @Route("/panier")
  */
 class PanierController extends AbstractController
 {
-    /** @var UserAuthController */
-    private $authController;
+    /**
+     * @var UserAuth
+     * Pour gérer l'utilisateur actuellement authentifié
+     */
+    private $auth;
 
     /**
      * LignePanierController constructor.
      *
-     * @param UserAuthController $authController
+     * @param UserAuth $auth
      */
-    public function __construct(UserAuthController $authController)
+    public function __construct(UserAuth $auth)
     {
-        $this->authController = $authController;
-        $authController->initialize();
+        $this->auth = $auth;
     }
 
     /**
-     * On visualise tout un panier, pas une ligne de panier
+     * Route pour visualiser son panier
+     * On visualise bien tout un panier, pas une ligne de panier
+     *
      * @Route("/", name="panier")
      */
     public function showAction(LignePanierRepository $lignePanierRepository): Response
     {
-        if (!$this->authController->isLogged())
+        if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
         return $this->render('panier/show.html.twig',
-                             ['ligne_paniers' => $lignePanierRepository->findBy(['utilisateur' => $this->authController->getCurrentUser()])]);
+                             ['ligne_paniers' => $lignePanierRepository->findBy(['utilisateur' => $this->auth->getCurrentUser()])]);
     }
 
     /**
-     * Ici on ajoute bien un panier, pas une ligne de panier
+     * Ici on ajoute bien un panier entier, pas une ligne de panier
+     * Le stock des produits est mis à jour en fonction de la requête de l'utilisateur     *
+     *
      * @Route("/add", name="add_panier")
      *
-     * Pour éviter qu'une erreur symfony apparaisse, 'methods={"POST"}' est géré dans l'action
+     * Pour éviter qu'une erreur 500 symfony apparaisse, 'methods={"POST"}' est géré dans l'action
+     * Ainsi si l'on arrive sur cette route sans avoir fourni de formulaire, on est redirigé
      */
     public function addAction(Request $request, LignePanierRepository $lignePanierRepository, ProduitRepository $produitRepository): Response
     {
-        if (!$this->authController->isLogged())
+        if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
         // Vérification que le formulaire a été posté
-        if ($request->get('submitted') === null)
+        if (!$request->isMethod('POST'))
             return $this->redirectToRoute('panier');
 
-        $utilisateur = $this->authController->getCurrentUser();
+        $utilisateur = $this->auth->getCurrentUser();
 
         // On parcours tous les produits,
         // si on a commandé ce produit, et s'il est en stock
@@ -66,7 +78,7 @@ class PanierController extends AbstractController
         // Alors on ajoute un nouvelle ligne au panier
         // et on met à jour la bdd en conséquence
         foreach ($produitRepository->findAll() as $produit) {
-            $qte_commande = $request->get('qte_' . $produit->getId());
+            $qte_commande = $request->query->get('qte_' . $produit->getId());
             $stockProduit = $produit->getQteStock();
 
             if ($stockProduit > 0 && $qte_commande > 0 && $qte_commande <= $stockProduit) {
@@ -90,9 +102,10 @@ class PanierController extends AbstractController
                 $lignePanier->setProduit($produit);
                 $lignePanier->setQuantite($qte_commande);
 
-                // maj de la bdd
+                // maj du stock
                 $produit->setQteStock($stockProduit - $qte_commande);
 
+                // maj de la bdd
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($lignePanier);
                 $manager->persist($produit);
@@ -104,15 +117,17 @@ class PanierController extends AbstractController
     }
 
     /**
+     * Route pour supprimer une ligne de panier
+     * la variable {id} est automatiquement gérée par symfony et provoque une erreur 404 si l'id est invalide
+     *
      * @Route("/delete/{id}", name="ligne_panier_delete")
      */
-    public
-    function deleteLignePanierAction(LignePanier $lignePanier): Response
+    public function deleteLignePanierAction(LignePanier $lignePanier): Response
     {
-        if (!$this->authController->isLogged())
+        if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
-        $this->deleteLignePanier($lignePanier, $this->authController->getCurrentUser(), false);
+        $this->deleteLignePanier($lignePanier, $this->auth->getCurrentUser(), false);
 
         return $this->redirectToRoute('panier');
     }
@@ -120,6 +135,9 @@ class PanierController extends AbstractController
     /**
      * Supprime la ligne panier d'un utilisateur.
      * Renvoie un bool pour tester si la suppression s'est bien passée
+     * Dans le cas d'un achat le produit n'est pas remis en stock
+     *
+     * On ne vérifie pas si l'utilisateur ou la ligne sont nulls, c'est à la fonction qui appel de s'en charger
      *
      * @param LignePanier $lignePanier La ligne à supprimer
      * @param Utilisateur $utilisateur L'utilisateur qui demande la suppression
@@ -150,20 +168,9 @@ class PanierController extends AbstractController
     }
 
     /**
-     * @Route("/delete/", name="panier_delete")
+     * Supprime tout le panier d'un utilisateur.
+     * On ne vérifie pas si l'utilisateur est null, c'est à la fonction qui appel de s'en charger
      */
-    public function deletePanierAction(): Response
-    {
-        if ($this->authController != 1)
-            return $this->redirectToRoute('error');
-
-        $this->deletePanier($this->authController->getCurrentUser(), false);
-
-        $this->addFlash('info', 'Panier vidé');
-
-        return $this->redirectToRoute('panier');
-    }
-
     public function deletePanier(Utilisateur $utilisateur, bool $achat)
     {
         $panier = $utilisateur->getPanier();
@@ -173,14 +180,37 @@ class PanierController extends AbstractController
     }
 
     /**
+     * Route pour supprimer tout un panier.
+     * On fait appel aux fonctions ci-dessus
+     *
+     * @Route("/delete/", name="panier_delete")
+     */
+    public function deletePanierAction(): Response
+    {
+        if ($this->auth != 1)
+            return $this->redirectToRoute('error');
+
+        // l'authController ne peut pas fournir un utilisateur null
+        $this->deletePanier($this->auth->getCurrentUser(), false);
+
+        $this->addFlash('info', 'Panier vidé');
+
+        return $this->redirectToRoute('panier');
+    }
+
+    /**
+     * Route pour commander les produits dans le panier
+     * Même principe pour la suppression
+     *
      * @Route("/acheter", name="panier_acheter")
      */
     public
     function acheterPanierAction(UserAuthController $authController): Response
     {
-        if (!$this->authController->isLogged())
+        if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
+        // l'authController ne peut pas fournir un utilisateur null
         $this->deletePanier($authController->getCurrentUser(), true);
 
         $this->addFlash('info', 'Commande prise en compte');

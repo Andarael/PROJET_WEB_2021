@@ -9,6 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ProduitRepository::class)
  * @ORM\Table (name="im2021_produits", options={"COMMENT"="table des produits"})
+ *
+ * Les assertions sont là pour vérifier automatiquement les données des formulaires
  */
 class Produit
 {
@@ -40,7 +42,17 @@ class Produit
      */
     private $qteStock;
 
-    public function getId(): ?int
+    /**
+     * Produit constructor.
+     */
+    public function __construct()
+    {
+        $this->qteStock = 0;
+        $this->prix = 0;
+        $this->libelle = 'null'; // pour le __toString (qu'on n'utilise pas au final ...)
+    }
+
+    public function getId(): int
     {
         return $this->id;
     }
