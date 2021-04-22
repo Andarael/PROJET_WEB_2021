@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
  * @ORM\Table(name="im2021_lignes_panier",
  *     uniqueConstraints={@UniqueConstraint(name="usr_prod", columns={"utilisateur","produit"})})
  *
- * Les contrainte sont là pour les coupes (utilisateur, produit) soient uniques
+ * Les contraintes sont là pour que les couples (utilisateur, produit) soient uniques
  * On garde la clé primaire 'id' pour plus de simplicité dans la gestion des lignes dans Symfony
  */
 class LignePanier

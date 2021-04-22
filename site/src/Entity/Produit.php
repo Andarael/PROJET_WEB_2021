@@ -47,8 +47,8 @@ class Produit
      */
     public function __construct()
     {
-        $this->qteStock = 0;
-        $this->prix = 0;
+        $this->qteStock = null;
+        $this->prix = null;
         $this->libelle = null; // pour le __toString (qu'on n'utilise pas au final ...)
     }
 

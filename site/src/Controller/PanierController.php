@@ -78,7 +78,7 @@ class PanierController extends AbstractController
         // Alors on ajoute un nouvelle ligne au panier
         // et on met à jour la bdd en conséquence
         foreach ($produitRepository->findAll() as $produit) {
-            $qte_commande = $request->query->get('qte_' . $produit->getId());
+            $qte_commande = $request->get('qte_' . $produit->getId());
             $stockProduit = $produit->getQteStock();
 
             if ($stockProduit > 0 && $qte_commande > 0 && $qte_commande <= $stockProduit) {
@@ -187,7 +187,7 @@ class PanierController extends AbstractController
      */
     public function deletePanierAction(): Response
     {
-        if ($this->auth != 1)
+        if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
         // l'authController ne peut pas fournir un utilisateur null
@@ -205,13 +205,13 @@ class PanierController extends AbstractController
      * @Route("/acheter", name="panier_acheter")
      */
     public
-    function acheterPanierAction(UserAuthController $authController): Response
+    function acheterPanierAction(): Response
     {
         if (!$this->auth->isLogged())
             return $this->redirectToRoute('error');
 
         // l'authController ne peut pas fournir un utilisateur null
-        $this->deletePanier($authController->getCurrentUser(), true);
+        $this->deletePanier($this->auth->getCurrentUser(), true);
 
         $this->addFlash('info', 'Commande prise en compte');
 

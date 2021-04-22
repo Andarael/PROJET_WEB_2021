@@ -48,3 +48,5 @@ class LignePanierRepository extends ServiceEntityRepository
     }
     */
 }
+
+/*Fichier par josué Raad et Florian Portrait*/
