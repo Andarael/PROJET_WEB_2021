@@ -49,7 +49,7 @@ class Produit
     {
         $this->qteStock = 0;
         $this->prix = 0;
-        $this->libelle = 'null'; // pour le __toString (qu'on n'utilise pas au final ...)
+        $this->libelle = null; // pour le __toString (qu'on n'utilise pas au final ...)
     }
 
     public function getId(): int
@@ -95,6 +95,9 @@ class Produit
 
     public function __toString()
     {
+        if (is_null($this->libelle))
+            return "";
+
         return $this->libelle;
     }
 
